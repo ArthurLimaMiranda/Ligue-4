@@ -6,59 +6,48 @@ import java.util.Random;
 
 public class Tabuleiro {
 
-	public static final int WIDTH = 6 , HEIGHT = 6;
+	public static final int Width = 7 , Height = 6, offSet = 3;
 	public static int[][]  TABULEIRO;
 	
-	public static int Slot_Vazio =  0,FICHA_p1 =  1,FICHA_p2 =  2, FICHA_pc = 3 ;
+	private int tileSize = 30;
 	
 	public Tabuleiro() {
 		
-		TABULEIRO = new int[WIDTH][HEIGHT] ;
+		TABULEIRO = new int[Width][Height] ;
 		
-		TABULEIRO[0][0] = 1; // ficha Player 1 começa no priemiro slot
+		TABULEIRO[0][0] = 1;
 		
-		/*for(int x = 0; x < WIDTH; x++) {
-			for(int y = 0; y < HEIGHT; y++) {
-				TABULEIRO[x][y] = new Random().nextInt(3);
-		
-	}
-	}*/
 	}
 	
+	public void update() {
+		//Ativar Mouse
+		if(Game.selected && (Game.xClick != -1 && Game.yClick != -1) ) {
+
+
+		}				
+	}
+	
+	
 	public void render(Graphics g) {
-		for(int x = 0; x < WIDTH; x++) {
-			for(int y = 0; y < HEIGHT; y++) {
+		for(int x = 0; x < Width; x++) {
+			for(int y = 0; y < Height; y++) {
 				g.setColor(Color.white); //slots das fichas
-				g.drawRect(x*48, y*48, 48,48);
-				
-				int ficha = TABULEIRO[x][y];
-				
-				if(ficha == FICHA_pc) {
-					g.setColor(Color.green);
-					g.fillRect(x*48 + 12, y*48 + 12, 25, 25);
+				g.drawRect((x*tileSize)+Game.WIDTH/offSet, (y*tileSize)+Game.HEIGHT/offSet, tileSize, tileSize);
+				if((Game.xClick>=Game.WIDTH/offSet) && (Game.xClick<=((Width*tileSize)+Game.WIDTH/offSet)) &&
+				   (Game.yClick>=Game.HEIGHT/offSet) && (Game.yClick<=((Height*tileSize)+Game.HEIGHT/offSet))) {
+					int coluna = (Game.xClick/tileSize)-(Game.WIDTH/tileSize/offSet);
+					g.setColor(Color.black);
+					g.drawRect((coluna*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);
+					
+					if(Game.selected == false) {
+						Game.selected = true;
+						System.out.print("\n\n\n");
+						System.out.println(Game.WIDTH/tileSize/offSet);
+	
+					}
+					
 				}
-				if(ficha == FICHA_p1) {
-					g.setColor(Color.red);
-					g.fillRect(x*48 + 12, y*48 + 12, 25, 25);
-				}
-				if(ficha == FICHA_p2) {
-					g.setColor(Color.cyan);
-					g.fillRect(x*48 + 12, y*48 + 12, 25, 25);
-				}
-				if(ficha == Slot_Vazio) {
-					g.setColor(Color.blue);
-					g.fillRect(x*48 + 12, y*48 + 12, 25, 25);
-				}
-				
-				if(Game.selected) {
-					//Posição de x e y no tabuleiro
-					int Pos_x = Game.X_inicial/48;
-					int Pos_y = Game.Y_inicial/48;
-					//Desenha um retângulo
-					g.setColor(Color.BLACK);
-					g.drawRect(Pos_x*48,Pos_y*48,48,48); 
-				}
-				
+							
 				
 			}
 		}

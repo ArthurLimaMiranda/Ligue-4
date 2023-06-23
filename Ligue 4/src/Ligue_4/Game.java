@@ -17,20 +17,18 @@ import javax.swing.JFrame;
 
 public  class Game extends Canvas implements Runnable, MouseMotionListener, MouseListener ,KeyListener {
 
-	public static final int WIDTH =288, HEIGHT = 288;//Tamanho janela
-	public static final int SCALE = 2;//Escala 
-	
+	public static final int WIDTH = 640, HEIGHT = 400, SCALE =  2;
 	public static final int FPS = 1000/60;
+	
+	public static int xClick, yClick;
+	public static  int nClicks = 0;
+	public static boolean selected = false;
+	public static boolean chosen = false;
 	
 	public Tabuleiro tabuleiro;
 	
-	
 	public BufferedImage image = new BufferedImage(WIDTH, HEIGHT,BufferedImage.TYPE_INT_RGB);
-	
-	public static boolean selected = false;
-	
-	public static int X_inicial = 0, Y_inicial = 0;
-	public static int X_final = -1, Y_final = -1;
+
 	
 	public Game() {
 		
@@ -45,13 +43,13 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		
 		tabuleiro = new Tabuleiro();
 	}
-	
+
 	public static void main(String[] args) {
 		
 		JFrame frame = new JFrame("Ligue 4");
 		Game game = new Game();
 		frame.add(game);
-		frame.setResizable(false); // fixar tamanho janela
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		
@@ -63,35 +61,9 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	}
 	
 	public void update() {
-		//Ativar Mouse
-		if(Game.selected && (Game.X_final != -1 && Game.Y_final != -1) ) {
-			int Pos_x0 = Game.X_inicial/48;
-			int Pos_y0 = Game.Y_inicial/48;
+		tabuleiro.update();		
 			
-			int Pos_xf = Game.X_final/48;
-			int Pos_yf = Game.Y_final/48;
-			
-			if((Pos_xf == Pos_x0 + 1 || Pos_xf == Pos_x0 - 1)) {		
-					System.out.println("Slot Permitido!");
-					
-					// Move a peça de coluna
-					
-					int Pos_inicial = Tabuleiro.TABULEIRO[Pos_x0][Pos_y0];
-					int Pos_next = Tabuleiro.TABULEIRO[Pos_xf][Pos_yf];
-					
-					
-					Tabuleiro.TABULEIRO[Pos_xf][Pos_yf] = Pos_inicial; 
-					Tabuleiro.TABULEIRO[Pos_x0][Pos_y0] = Pos_next;
-	
-					
-					Game.X_final = -1;
-					Game.Y_final = -1;
-					Game.selected = false;								
-				}
-			}
-			
-			
-		}
+	}
 	
 	
 	public void render() {
@@ -103,6 +75,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		}
 		
 		Graphics g =image.getGraphics();
+		
 		//Renderização(início)
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
@@ -132,25 +105,11 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		
-		if(Game.selected == false) {
-			Game.selected = true;
-			//pega a pósição de x e y na janela em tempo real
-			Game.X_inicial = e.getX()/2;
-			Game.Y_inicial = e.getY()/2;
-		}else {
-			Game.X_final = e.getX()/2;
-			Game.Y_final = e.getY()/2;
-		}
-		
-		if(e.getClickCount() == 2) {
-			// BOTAR ANIMAÇÃO DE QUEDA AQUI!!!!!!!!!!!!!!!!
-			System.out.println("QUEDA");
-			Game.X_inicial = e.getX()/2;
-			Game.Y_inicial = e.getY()/2;
-			
-			
-		}
-		
+	
+			Game.selected = false;
+			Game.xClick = e.getX()/SCALE;
+			Game.yClick = e.getY()/SCALE;
+
 	}
 	
 	//EVENTOS MOUSE
@@ -195,24 +154,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		
 		@Override
 	public void keyPressed(KeyEvent e) {
-			
-			 													
-			if(e.getKeyCode() == KeyEvent.VK_LEFT) {
-				
-				Game.X_final = Game.X_inicial/48 -1;
-							
-			}
-			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				
-				Game.X_final = Game.X_inicial/48 + 1;
-			}
-			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-				
-				System.out.println("QUEDA");
-			}
-			
 
-			
 		}
 		
 		@Override

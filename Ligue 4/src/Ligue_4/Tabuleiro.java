@@ -3,6 +3,7 @@ package Ligue_4;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Tabuleiro {
@@ -14,10 +15,17 @@ public class Tabuleiro {
 	private int coluna, colunaSelected = -1, colunaChosen = -1;
 	private boolean dentro = false, selected = false, chosen = false;
 	
+	public ArrayList<Ficha> fichas;
+	
 	public Tabuleiro() {
 
 		TABULEIRO = new int[Width][Height] ;
 		TABULEIRO[0][0] = 1;
+		
+		fichas = new ArrayList<>();
+		
+		fichas.add(new Ficha(1));
+		
 	}
 	
 	public void update() {
@@ -59,17 +67,41 @@ public class Tabuleiro {
 				g.setColor(Color.white); //slots das fichas
 				g.drawRect((x*tileSize)+Game.WIDTH/offSet, (y*tileSize)+Game.HEIGHT/offSet, tileSize, tileSize);
 				
+				Ficha cor = fichas.get(fichas.size() -1);			
+				
+				if(cor.modelo == 1) {
+					
+					g.setColor(Color.red);
+					g.fillRect((coluna*tileSize)+Game.WIDTH/offSet + 6, Game.HEIGHT/offSet + 6, 17, 17);
+				}
+				
+				if(cor.modelo == 2) {
+					
+					g.setColor(Color.cyan);
+					g.fillRect((coluna*tileSize)+Game.WIDTH/offSet + 6, Game.HEIGHT/offSet + 6, 17, 17);
+				}
+				
+				if(cor.modelo == 3) {
+					
+					g.setColor(Color.green);
+					g.fillRect((coluna*tileSize)+Game.WIDTH/offSet + 6, Game.HEIGHT/offSet + 6, 17, 17);
+				}
+				
+				
 				if(selected) {
 					g.setColor(Color.red);
 					g.drawRect((colunaSelected*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);
 				}
-
+				// Aciona "Selecionado"
 				if(dentro && !selected) {
 
 						g.setColor(Color.black);
 						g.drawRect((coluna*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);	
 						
 				}		
+				
+				
+				
 			}
 		}
 	}

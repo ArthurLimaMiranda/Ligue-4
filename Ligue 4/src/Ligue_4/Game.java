@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
@@ -30,7 +31,9 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	public Tabuleiro tabuleiro;
 	
 	public BufferedImage image = new BufferedImage(WIDTH, HEIGHT,BufferedImage.TYPE_INT_RGB);
-
+	
+	
+	
 	
 	public Game() {
 		
@@ -44,6 +47,8 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		this.addKeyListener(this);
 		
 		tabuleiro = new Tabuleiro();
+		
+		
 	}
 
 	public static void main(String[] args) {

@@ -1,5 +1,12 @@
 package Ligue_4;
 
 public class Ficha {
- int player;
+	
+	int modelo;
+	
+	public Ficha (int modelo) {
+		
+		this.modelo = modelo;	
+	}
+	
 }

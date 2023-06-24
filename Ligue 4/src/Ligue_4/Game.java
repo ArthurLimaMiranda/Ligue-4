@@ -21,9 +21,11 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	public static final int FPS = 1000/60;
 	
 	public static int xClick, yClick;
+	public static int xPos, yPos;
 	public static  int nClicks = 0;
-	public static boolean selected = false;
-	public static boolean chosen = false;
+	
+	public static boolean clicked = false;
+
 	
 	public Tabuleiro tabuleiro;
 	
@@ -46,7 +48,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 
 	public static void main(String[] args) {
 		
-		JFrame frame = new JFrame("Ligue 4");
+		JFrame frame = new JFrame("A busca por 4 conexões");
 		Game game = new Game();
 		frame.add(game);
 		frame.setResizable(false);
@@ -104,15 +106,21 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
-	
-			Game.selected = false;
+
 			Game.xClick = e.getX()/SCALE;
 			Game.yClick = e.getY()/SCALE;
+			Game.clicked = true;
 
 	}
 	
-	//EVENTOS MOUSE
+	@Override
+	public void mouseMoved(MouseEvent f) {
+		
+		Game.xPos = f.getX()/SCALE;
+		Game.yPos = f.getY()/SCALE;
+		Game.clicked = false;
+		
+	}
 	
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
@@ -128,24 +136,16 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 	
 	
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}

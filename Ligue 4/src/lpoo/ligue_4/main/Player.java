@@ -1,4 +1,4 @@
-package Ligue_4;
+package lpoo.ligue_4.main;
 
 public class Player{
 

@@ -1,4 +1,4 @@
-package Ligue_4;
+package lpoo.ligue_4.main;
 
 import java.awt.Canvas;
 
@@ -23,7 +23,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	
 	public static int xClick, yClick;
 	public static int xPos, yPos;
-	public static  int nClicks = 0;
+
 	
 	public static boolean clicked = false;
 

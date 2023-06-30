@@ -17,20 +17,48 @@ public class Tabuleiro {
 	private boolean dentro = false, selected = false, chosen = false, drop = false;
 	
 	private ArrayList<Ficha> fichas;
+	private int [] cores = new int [42]; // salvar as cores das fichas
 	private int cor;
+	
+	private int Round = 1;
+	public boolean P2 = true;
 	
 	public Tabuleiro() {
 
 		TABULEIRO = new int[Width][Height] ;
 
 		fichas = new ArrayList<>();
-		fichas.add(new Ficha(1));
-		cor = fichas.get(fichas.size() -1).modelo;
+			
+		
+		for (int a = 0; a < 42; a++) {
+			
+			if (a % 2 != 0 && P2 == true) {
+				
+				fichas.add(new Ficha(2));
+				
+			}else if (a % 2 != 0 && P2 == false) {
+				
+				fichas.add(new Ficha(3));
+			}else {
+				
+				fichas.add(new Ficha(1));
+			}
+			
+		}
+		
+		for (int a = 0; a < 42; a++) {
+			cores[a] = fichas.get(a).modelo;
+		}
+		
+		cor = cores[Round- 1];	
+		//Round = Round +1;
 		
 	}
 	
 	public void update() {
 		
+		
+		// AQ
 		if(!drop) {
 			//Checa se o mouse se encontra dentro do tabuleiro e em qual coluna esta em cima
 			if((Game.xPos>Game.WIDTH/offSet) && (Game.xPos<((Width*tileSize)-3+Game.WIDTH/offSet)) &&
@@ -77,12 +105,16 @@ public class Tabuleiro {
 			}
 			//Insere a coluna e a linha no tabuleiro
 			if(chosen && !drop) {
-				TABULEIRO[colunaChosen][dropTo] = fichas.get(fichas.size() - 1).modelo;
-				fichas.add(new Ficha(1));
-				cor = fichas.get(fichas.size() -1).modelo;
+				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).modelo;
+				//fichas.add(new Ficha(1));
+				//cor = cores[Round - 1];	
+				//Round = Round + 1;
+				Round = Round +1;
+				System.out.println(Round);
 				chosen = false;
 			}
 		}
+		// AQ
 	}
 	
 	public void render(Graphics g) {
@@ -111,7 +143,7 @@ public class Tabuleiro {
 					g.fillRect((x*tileSize)+Game.WIDTH/offSet+dropSet-tileSize, (y*tileSize)+Game.HEIGHT/offSet+dropSet-tileSize, 17, 17);
 				}			
 				
-				switch (cor) {
+				switch (cor = cores[Round- 1]) {
 					case 1:
 						g.setColor(Color.red);
 						break;
@@ -123,7 +155,7 @@ public class Tabuleiro {
 					case 3:
 						g.setColor(Color.green);
 						break;
-				}	
+				}
 				
 				//Destaca a coluna que o mouse esta em cima
 				if(dentro && !selected && !drop) {
@@ -145,6 +177,7 @@ public class Tabuleiro {
 					dropping+=0.1;
 					if((int)dropping-dropSet>=(dropTo*tileSize)+dropSet-tileSize) {
 						drop=false;
+						
 					}
 					
 				}

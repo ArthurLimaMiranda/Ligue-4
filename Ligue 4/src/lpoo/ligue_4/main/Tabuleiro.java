@@ -23,6 +23,11 @@ public class Tabuleiro {
 	private int Round = 1;
 	public boolean P2 = true;
 	
+	public int [] ficha_na_linhas = new int [Width];
+	public int [] ficha_na_coluna = new int [Height];
+	public int [] ficha_na_diagonal_principal = new int [6];
+	public int [] ficha_na_diagonal_secundaria = new int [6];
+	
 	public Tabuleiro() {
 
 		TABULEIRO = new int[Width][Height] ;
@@ -51,7 +56,71 @@ public class Tabuleiro {
 		}
 		
 		cor = cores[Round- 1];	
-		//Round = Round +1;
+		
+	}
+	
+	public void ChecarWin() { // TROCAR PRA BOOLEAN AQ Q EU ESQUECI DE DAR O RETURN :)
+		
+		//Win na Linha				
+		for (int x = 0 ; x < Width-3 ; x ++) {
+			for (int y = 0; y < Height ; y ++) {							
+				
+				int slot01 = TABULEIRO[x][y];
+				int slot02 = TABULEIRO[x+1][y];
+				int slot03 = TABULEIRO[x+2][y];
+				int slot04 = TABULEIRO[x+3][y];
+				
+				if ((slot01 == slot02) == (slot03 == slot04)) {
+					
+					System.out.println("Win de P:" + slot01);
+				}				 
+			}			
+		}
+		// Win na Coluna
+		for (int y = 0 ; y < Height -3 ; y ++) {
+			for (int x = 0; x < Width ; x ++) {							
+				
+				int slot01 = TABULEIRO[x][y];
+				int slot02 = TABULEIRO[x][y+1];
+				int slot03 = TABULEIRO[x][y+2];
+				int slot04 = TABULEIRO[x][y+3];
+				
+				if ((slot01 == slot02) == (slot03 == slot04)) {
+					
+					System.out.println("Win de P:" + slot01);
+				}				 
+			}			
+		}
+		//Win Diagona Principal
+		for (int x = 0 ; x < Width -3; x ++) {
+			for (int y = 0; y < Height-3 ; y ++) {							
+				
+				int slot01 = TABULEIRO[x][y];
+				int slot02 = TABULEIRO[x+1][y+1];
+				int slot03 = TABULEIRO[x+2][y+2];
+				int slot04 = TABULEIRO[x+3][y+3];
+				
+				if ((slot01 == slot02) == (slot03 == slot04)) {
+					
+					System.out.println("Win de P:" + slot01);
+				}				 
+			}			
+		}
+		//Win Diagonal Secundária
+		for (int x = 0 ; x < Width -3; x ++) {
+			for (int y = Height; y < 3 ; y --) {							
+				
+				int slot01 = TABULEIRO[x][y];
+				int slot02 = TABULEIRO[x+1][y-1];
+				int slot03 = TABULEIRO[x+2][y-2];
+				int slot04 = TABULEIRO[x+3][y-3];
+				
+				if ((slot01 == slot02) == (slot03 == slot04)) {
+					
+					System.out.println("Win de P:" + slot01);
+				}				 
+			}			
+		}
 		
 	}
 	
@@ -106,11 +175,7 @@ public class Tabuleiro {
 			//Insere a coluna e a linha no tabuleiro
 			if(chosen && !drop) {
 				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).modelo;
-				//fichas.add(new Ficha(1));
-				//cor = cores[Round - 1];	
-				//Round = Round + 1;
 				Round = Round +1;
-				System.out.println(Round);
 				chosen = false;
 			}
 		}

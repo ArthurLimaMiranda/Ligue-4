@@ -114,6 +114,14 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		}
 	}
 	
+	
+	public void Win() {
+		
+		
+	}
+	
+	
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
@@ -131,6 +139,10 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		Game.clicked = false;
 		
 	}
+	
+	
+	
+	
 	
 	@Override
 	public void mouseEntered(MouseEvent arg0) {

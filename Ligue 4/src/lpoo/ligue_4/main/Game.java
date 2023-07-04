@@ -4,6 +4,7 @@ import java.awt.Canvas;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -26,6 +27,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 
 	
 	public static boolean clicked = false;
+	public static boolean vitP1 = false, vitP2 = false;
 
 	
 	public Tabuleiro tabuleiro;
@@ -69,7 +71,10 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	
 	public void update() {
 		tabuleiro.update();		
-			
+		if(vitP1) {
+			setVisible(false);
+			System.exit(0);
+		}
 	}
 	
 	

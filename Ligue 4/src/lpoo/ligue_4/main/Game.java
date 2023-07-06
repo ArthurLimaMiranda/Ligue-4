@@ -32,6 +32,8 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	
 	public Tabuleiro tabuleiro;
 	
+	public Tabuleiro_Turbo tabuleiro_turbo;
+	
 	public BufferedImage image = new BufferedImage(WIDTH, HEIGHT,BufferedImage.TYPE_INT_RGB);
 	
 	
@@ -48,7 +50,9 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		this.setFocusable(true);
 		this.addKeyListener(this);
 		
-		tabuleiro = new Tabuleiro();
+		//tabuleiro = new Tabuleiro();
+		tabuleiro_turbo = new Tabuleiro_Turbo();
+	
 		
 		
 	}
@@ -70,7 +74,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	}
 	
 	public void update() {
-		tabuleiro.update();		
+		tabuleiro_turbo.update_Turbo();	//trocar aq
 		if(vitP1) {
 			setVisible(false);
 			System.exit(0);
@@ -91,7 +95,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		//Renderização(início)
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		tabuleiro.render(g);
+		tabuleiro_turbo.render_Turbo(g); //TROCAR AQ
 		//Renderização(fim)
 		
 		g = bs.getDrawGraphics();

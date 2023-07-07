@@ -20,6 +20,8 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 	protected boolean[] buxinCheio = new boolean[7];
 	
 	protected Ficha fichaAr;
+	protected Ficha fichaBr;
+	protected Ficha fichaCr;
 	protected Ficha ficha_trocada;
 	protected ArrayList<Ficha> fichas;
 	protected Spritesheet spritesheet;
@@ -32,7 +34,7 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 	protected int Round = 1;
 	protected boolean P2 = true;
 	
-	boolean trocar,trocar_left, trocar_right;
+	boolean trocar,trocar_left, trocar_right,trocar_rightANDlef;
 	int cor_trocada ;
 	int[][] id = new int [42][42];
 	int id_ficha;
@@ -145,17 +147,21 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 				
 				cor_trocada = getId(dropTo ,colunaChosen);
 				
+				
+				
+				if(ChecarWin(dropTo, colunaChosen)!=0) {
+					Game.vitP1 = true;
+					System.out.println("WINNNN");
+					
+				}
+				
 				System.out.println("cor_trocada:" + cor_trocada);
 				
 				Round++;
 				chosen = false;
 							
 				
-				if(Chamar_ChecarWin(dropTo, colunaChosen)!=0) {
-					Game.vitP1 = true;
-					System.out.println("WINNNN");
-					
-				}
+				
 				
 				
 				System.out.println(Round);
@@ -184,6 +190,7 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 				
 				cor = cores[Round- 1];
 				fichaAr = new Ficha(cor, 0, 0, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
+				
 				//ficha_trocada = new Ficha(cor_trocada, 0, 0, 32, 32, spritesheet.getSprite(32*cor_trocada, 0, 32, 32));
 				
 				//Destaca a coluna que o mouse esta em cima
@@ -206,32 +213,32 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 				
 				
 				
-				if(trocar_left == true) {
+				if(trocar_left == true||trocar_rightANDlef == true) {
 					
 					System.out.println("trocar a cor da esquerda");
-					fichaAr = new Ficha(cor_trocada, 0, 0, 32, 32, spritesheet.getSprite(32*cor_trocada, 0, 32, 32));
+					fichaBr = new Ficha(cor_trocada, 0, 0, 32, 32, spritesheet.getSprite(32*cor_trocada, 0, 32, 32));
 					
 					
-					fichaAr.setX(dropTo);
-					fichaAr.setY(colunaChosen);	
+					fichaBr.setX((colunaChosen*tileSize)+Game.WIDTH/offSet - 30);
+					fichaBr.setY((Game.HEIGHT/offSet)-dropSet+(int)dropping -4);	
 					
-					fichaAr.render(g);
+					fichaBr.render(g);
 					
 				}
 				
-				if(trocar_right == true) {				
+				if(trocar_right == true ||trocar_rightANDlef == true) {				
 					
 					System.out.println("trocar a cor da direita");
 					
-					fichaAr = new Ficha(cor_trocada, 0, 0, 32, 32, spritesheet.getSprite(32*cor_trocada, 0, 32, 32));			
-					fichaAr.setX(dropTo);
-					fichaAr.setY(colunaChosen);
+					fichaCr = new Ficha(cor_trocada, 0, 0, 32, 32, spritesheet.getSprite(32*cor_trocada, 0, 32, 32));			
+					fichaCr.setX((colunaChosen*tileSize)+Game.WIDTH/offSet + 30);
+					fichaCr.setY((Game.HEIGHT/offSet)-dropSet+(int)dropping -4 );
 					
-					fichaAr.render(g);
+					fichaCr.render(g);
 					
 					
 				}
-			
+											
 				//Animação de queda				
 				if(drop) {
 					
@@ -240,6 +247,10 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 					fichaAr.setY((Game.HEIGHT/offSet)-dropSet+(int)dropping);
 					fichaAr.render(g);
 					dropping+=0.1;
+					
+					if(trocar_right == true || trocar_left == true) {
+						fichaBr.render(g);
+					}
 					
 					
 					//id[]
@@ -251,6 +262,7 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 					
 					trocar_right = false;
 					trocar_left = false;
+					trocar_rightANDlef = false;
 					
 				}
 			}
@@ -285,8 +297,13 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 			 		 
 		}
 			
-			 	 
-		 if ((Slot_Centro != Slot_Esquerda) && Slot_Esquerda!=0) {				
+		
+		if(((Slot_Centro != Slot_Esquerda) && (Slot_Centro != Slot_Direita)) && ((Slot_Esquerda!=0) && (Slot_Direita!=0))) {
+			System.out.println("TROCOU" + Slot_Direita + "e" + Slot_Esquerda);	
+			cor_trocada = Slot_Centro;
+			return trocar_rightANDlef = true ;
+		} 	 
+		if ((Slot_Centro != Slot_Esquerda) && (Slot_Esquerda!=0)) {				
 				System.out.println("TROCOU" + Slot_Esquerda);	
 				cor_trocada = Slot_Centro;
 				return trocar_left = true;
@@ -299,7 +316,8 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 				return trocar_right = true;
 				//fichaAr = new Ficha(cor_trocada, coluna+1, linha, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
 				
-			}	
+			}				
+			
 			else {
 				System.out.println("nada");
 				trocar_left = false;

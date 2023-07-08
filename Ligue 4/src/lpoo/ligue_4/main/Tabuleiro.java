@@ -32,8 +32,11 @@ public class Tabuleiro {
 	
 	protected int Round = 1;	
 	
+
 	 
 	public Tabuleiro() {
+		
+				
 		
 		TABULEIRO = new int[Width][Height] ;
 		fichas = new ArrayList<Ficha>();
@@ -206,6 +209,8 @@ public class Tabuleiro {
 	public int ChecarWin(int linha, int coluna) {
 
 		int slot0, slot01, slot02, slot03, slot04;
+		int slot01_left, slot02_left, slot03_left, slot04_left;
+		int slot01_right, slot02_right, slot03_right, slot04_right;
 		slot0 = TABULEIRO[coluna][linha];
 		int xRel, yRel, sequencia;
 		boolean sair;
@@ -225,19 +230,20 @@ public class Tabuleiro {
 			}				 			
 		}
 		
-		// Win na Coluna
+		// Win na Coluna Geral
 		for (int y = 0 ; y < Height -3 ; y ++) {							
-			
-			slot01 = TABULEIRO[coluna][y];
-			slot02 = TABULEIRO[coluna][y+1];
-			slot03 = TABULEIRO[coluna][y+2];
-			slot04 = TABULEIRO[coluna][y+3];
+			for(int x = 0; x < Width ; x ++ ) {
+				slot01 = TABULEIRO[x][y];
+				slot02 = TABULEIRO[x][y+1];
+				slot03 = TABULEIRO[x][y+2];
+				slot04 = TABULEIRO[x][y+3];
 
-			if ((slot01==slot0) && (slot02==slot0) && (slot03==slot0) && (slot04==slot0)) {
+				if ((slot01==slot0) && (slot02==slot0) && (slot03==slot0) && (slot04==slot0)) {
 
-				System.out.println("Win coluna P:" + slot0);
-				return slot0;
+					System.out.println("Win coluna P:" + slot0);
+					return slot0;
 			}				 		
+		}
 		}
 		
 		
@@ -316,6 +322,9 @@ public class Tabuleiro {
 			System.out.println("Win digSec P:" + slot0);
 			return slot0;
 		}
+		
+		
+
 
 		return 0;
 	}

@@ -34,7 +34,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	public static boolean vitP1 = false, vitP2 = false;
 
 	public static String gameState = "Normal", playerName="";
-	public static int modoJogo = 0; //aletra modo de jogo (1 e 0 por enquanto)
+	public static int modoJogo = 1; //aletra modo de jogo (1 e 0 por enquanto)
 	public static boolean p2 = false;
 
 	public Tabuleiro_Turbo tabuleiro_turbo;

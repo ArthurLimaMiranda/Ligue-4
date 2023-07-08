@@ -10,36 +10,8 @@ import lpoo.ligue_4.grafs.Spritesheet;
 
 public class Tabuleiro_Turbo extends Tabuleiro {
 
-	public static final int Width = 7 , Height = 6, offSet = 3;
-	public static int[][]  TABULEIRO;
-	
-	protected int tileSize = 30, dropSet = 7+tileSize, dropTo;
-	protected float dropping;
-	protected int coluna, colunaSelected = -1, colunaChosen = -1;
-	protected boolean dentro = false, selected = false, chosen = false, drop = false;
-	protected boolean[] buxinCheio = new boolean[7];
-	
-	protected Ficha fichaAr;
-	protected Ficha fichaBr;
-	protected Ficha fichaCr;
-	protected Ficha ficha_trocada;
-	protected ArrayList<Ficha> fichas;
-	protected Spritesheet spritesheet;
-	
-	protected int [] cores = new int [42]; // salvar as cores das fichas
-	protected int cor;
-	
-	protected int nRounds = 42;
-	
-	protected int Round = 1;
-	protected boolean P2 = true;
-	
-	boolean trocar,trocar_left, trocar_right,trocar_rightANDlef;
-	int cor_trocada ;
-	int[][] id = new int [42][42];
-	int id_ficha;
-	
-	
+	boolean trocar, trocar_left, trocar_right;
+
 	public Tabuleiro_Turbo() {
 		
 		TABULEIRO = new int[Width][Height] ;
@@ -48,16 +20,17 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 		
 		for (int a = 0; a < nRounds; a++) {
 			
-			if (a % 2 != 0 && P2 == true) {			
+			if (a % 2 != 0 && Game.player2.getTipo() == 2) {			
 				fichas.add(new Ficha(2, 0, 0, 32, 32, spritesheet.getSprite(32*2, 0, 32, 32)));	
 			}
-			else if (a % 2 != 0 && P2 == false) {		
+			else if (a % 2 != 0 && Game.player2.getTipo() == 3) {		
 				fichas.add(new Ficha(3, 0, 0, 32, 32, spritesheet.getSprite(32*3, 0, 32, 32)));
 			}
 			else {		
 				fichas.add(new Ficha(1, 0, 0, 32, 32, spritesheet.getSprite(32*1, 0, 32, 32)));
 			}		
 		}
+		
 		
 		for (int a = 0; a < 42; a++) {
 			cores[a] = fichas.get(a).getModelo();
@@ -69,14 +42,14 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 		
 	}
 	
-	public void update_Turbo() {
+	public void update() {
 		
 
 		// AQ
 		if(!drop) {
 			
 			for(int i=0; i<fichas.size(); i++) {
-				Entity e = fichas.get(i);
+				Ficha e = fichas.get(i);
 				e.update();
 			}
 			
@@ -135,7 +108,8 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 			}
 			//Insere a coluna e a linha no tabuleiro
 			if(chosen && !drop && !buxinCheio[colunaChosen]) {
-				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).modelo;
+				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();
+				fichas.get(Round-1).setID(colunaChosen, dropTo);
 				
 				if(dropTo == 0) {
 					buxinCheio[colunaChosen] = true;
@@ -144,9 +118,37 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 				fichas.get(Round-1).setX((colunaChosen*tileSize)+Game.WIDTH/offSet);
 				fichas.get(Round-1).setY((dropTo*tileSize)+Game.HEIGHT/offSet);
 				
+
+				//ModoTurbo(dropTo,colunaChosen);// N é a música da luisa sonsa
 				
-				cor_trocada = getId(dropTo ,colunaChosen);
-				
+
+				if(ModoTurbo(colunaChosen, dropTo)) {
+					
+					if(trocar_left) {
+						TABULEIRO[colunaChosen-1][dropTo] = fichas.get(Round-1).getModelo();
+						for(int i=0;  i<fichas.size(); i++) {
+							Ficha e = fichas.get(i);
+							int[] id = e.getID();
+							if((id[0] == colunaChosen-1) && (id[1] == dropTo)) {
+								e.setModelo(fichas.get(Round-1).getModelo());
+								e.setSprite(fichas.get(Round-1).getSprite());
+							}
+						}	
+					}
+					
+					if(trocar_right) {
+						TABULEIRO[colunaChosen+1][dropTo] = fichas.get(Round-1).getModelo();
+						for(int i=0;  i<fichas.size(); i++) {
+							Ficha e = fichas.get(i);
+							int[] id = e.getID();
+							if((id[0] == colunaChosen+1) && (id[1] == dropTo)) {
+								e.setModelo(fichas.get(Round-1).getModelo());
+								e.setSprite(fichas.get(Round-1).getSprite());
+							}
+						}	
+					}
+					
+				}
 				
 				
 				if(ChecarWin(dropTo, colunaChosen)!=0) {
@@ -154,28 +156,19 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 					System.out.println("WINNNN");
 					
 				}
-				
-				System.out.println("cor_trocada:" + cor_trocada);
-				
+
 				Round++;
+				System.out.println(Round);
+				
 				chosen = false;
 							
-				
-				
-				
-				
-				System.out.println(Round);
-				ModoTurbo(dropTo,colunaChosen);// N é a música da luisa sonsa
-				System.out.println(cor_trocada);
-				System.out.println(trocar_left);
-				System.out.println(trocar_right);
 			}
 		}
 		// AQ
 		
 	}
 	
-	public void render_Turbo(Graphics g) {
+	public void render(Graphics g) {
 		
 		for(int x = 0; x < Width; x++) {
 			for(int y = 0; y < Height; y++) {
@@ -190,8 +183,6 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 				
 				cor = cores[Round- 1];
 				fichaAr = new Ficha(cor, 0, 0, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
-				
-				//ficha_trocada = new Ficha(cor_trocada, 0, 0, 32, 32, spritesheet.getSprite(32*cor_trocada, 0, 32, 32));
 				
 				//Destaca a coluna que o mouse esta em cima
 				if(dentro && !selected && !drop) {
@@ -211,150 +202,60 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 					g.drawRect((colunaSelected*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);
 				}
 				
-				
-				
-				if(trocar_left == true||trocar_rightANDlef == true) {
-					
-					System.out.println("trocar a cor da esquerda");
-					fichaBr = new Ficha(cor_trocada, 0, 0, 32, 32, spritesheet.getSprite(32*cor_trocada, 0, 32, 32));
-					
-					
-					fichaBr.setX((colunaChosen*tileSize)+Game.WIDTH/offSet - 30);
-					fichaBr.setY((Game.HEIGHT/offSet)-dropSet+(int)dropping -4);	
-					
-					fichaBr.render(g);
-					
-				}
-				
-				if(trocar_right == true ||trocar_rightANDlef == true) {				
-					
-					System.out.println("trocar a cor da direita");
-					
-					fichaCr = new Ficha(cor_trocada, 0, 0, 32, 32, spritesheet.getSprite(32*cor_trocada, 0, 32, 32));			
-					fichaCr.setX((colunaChosen*tileSize)+Game.WIDTH/offSet + 30);
-					fichaCr.setY((Game.HEIGHT/offSet)-dropSet+(int)dropping -4 );
-					
-					fichaCr.render(g);
-					
-					
-				}
-											
 				//Animação de queda				
 				if(drop) {
-					
-					
 					fichaAr.setX((colunaChosen*tileSize)+Game.WIDTH/offSet);
 					fichaAr.setY((Game.HEIGHT/offSet)-dropSet+(int)dropping);
 					fichaAr.render(g);
 					dropping+=0.1;
-					
-					if(trocar_right == true || trocar_left == true) {
-						fichaBr.render(g);
-					}
-					
-					
-					//id[]
-					
 					if((int)dropping-dropSet>=(dropTo*tileSize)-offSet+dropSet-tileSize) {
 						drop=false;
 						
 					}
-					
-					trocar_right = false;
-					trocar_left = false;
-					trocar_rightANDlef = false;
-					
 				}
 			}
-		}
+		}	
 		
-		
-		}
+	}
 			
 		
 	
 	
-	public boolean ModoTurbo(int linha, int coluna) {
+	public boolean ModoTurbo(int coluna, int linha) {
 			
 		int Slot_Centro = TABULEIRO[coluna][linha];
 		int Slot_Esquerda,Slot_Direita;	
 		
-		if (coluna == Width) {
-			
-			  Slot_Direita = TABULEIRO[coluna][linha];
-			  Slot_Esquerda = TABULEIRO[coluna-1][linha];
-			 
-		}if( coluna == 0) {
-			
-			 Slot_Esquerda = TABULEIRO[coluna][linha];
-			 Slot_Direita = TABULEIRO[coluna+1][linha];
-			 
-			 
-		}else {
-			
+		if (coluna == Width-1) {			
+			  Slot_Direita = Slot_Centro;
+			  Slot_Esquerda = TABULEIRO[coluna-1][linha]; 
+		}
+		
+		else if(coluna == 0) {
+			 Slot_Esquerda = Slot_Centro;
+			 Slot_Direita = TABULEIRO[coluna+1][linha];	 
+		}
+		
+		else {		
 			 Slot_Esquerda = TABULEIRO[coluna -1][linha];
-			 Slot_Direita = TABULEIRO[coluna +1][linha];
-			 		 
+			 Slot_Direita = TABULEIRO[coluna +1][linha];	 		 
 		}
+	 
+		trocar = false;
+		this.trocar_left = false;
+		this.trocar_right = false;
 			
-		
-		if(((Slot_Centro != Slot_Esquerda) && (Slot_Centro != Slot_Direita)) && ((Slot_Esquerda!=0) && (Slot_Direita!=0))) {
-			System.out.println("TROCOU" + Slot_Direita + "e" + Slot_Esquerda);	
-			cor_trocada = Slot_Centro;
-			return trocar_rightANDlef = true ;
-		} 	 
 		if ((Slot_Centro != Slot_Esquerda) && (Slot_Esquerda!=0)) {				
-				System.out.println("TROCOU" + Slot_Esquerda);	
-				cor_trocada = Slot_Centro;
-				return trocar_left = true;
-				//fichaAr = new Ficha(cor_trocada, coluna-1, linha, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
+			this.trocar_left = true;
+			trocar = true;
 				
-			}
-			if ((Slot_Centro != Slot_Direita)&& Slot_Direita!=0) {
-				System.out.println("TROCOU" + Slot_Direita);	
-				cor_trocada = Slot_Centro;
-				return trocar_right = true;
-				//fichaAr = new Ficha(cor_trocada, coluna+1, linha, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
-				
-			}				
-			
-			else {
-				System.out.println("nada");
-				trocar_left = false;
-				trocar_right =false;
-				return trocar = false;
-			}
-									
 		}
+		if ((Slot_Centro != Slot_Direita)&& Slot_Direita!=0) {
+			this.trocar_right = true;	
+			trocar = true;
+		}				
 		
-
-
-		
-	public int getId(int linha, int coluna) {
-		
-		id_ficha = fichas.get(Round-1).getModelo();
-		
-		id[linha][coluna] = id_ficha;
-		
-		System.out.println("id:" +id_ficha);
-		
-		return id_ficha;
-	}	
-	
-	public void setId(int id_ficha) {
-		
-		this.id_ficha =id_ficha;
-		
+		return trocar;
+									
 	}
-
-	
-	
-	public int Chamar_ChecarWin(int linha, int coluna){
-					
-		return super.ChecarWin(linha, coluna);
-	}
-	
-	
-	
-	
 }

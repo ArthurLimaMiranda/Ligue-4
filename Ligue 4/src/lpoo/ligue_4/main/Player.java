@@ -3,20 +3,30 @@ package lpoo.ligue_4.main;
 public class Player{
 
 	
-	boolean P1 = true; // Player 1 que sempre existe;
-	boolean P2, PC ; //  Player 2 e Pc;
+	private int tipo;
+	private String nome="";
 	
-	public boolean setP2() {
-		
-		if(PC == true) {			
-			P2 = false;
-		}	
-		return P2;
+	
+	
+	public Player(int tipo) {
+		this.tipo = tipo;
 	}
 	
-	public void getP2(boolean P2) {
-		
-		this.P2 = P2;	
+	public void setTipo(int tipo) {
+		this.tipo = tipo;
+	}
+
+	public int getTipo() {
+		return this.tipo;
 	}
 	
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getNome() {
+		return this.nome;
+	}
 }
+	
+	

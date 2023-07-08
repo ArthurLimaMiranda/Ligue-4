@@ -4,8 +4,10 @@ import java.awt.Canvas;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import lpoo.ligue_4.main.Menu;
+
 public  class Game extends Canvas implements Runnable, MouseMotionListener, MouseListener ,KeyListener {
 
 	public static final int WIDTH = 640, HEIGHT = 400, SCALE =  2;
@@ -24,21 +28,23 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	
 	public static int xClick, yClick;
 	public static int xPos, yPos;
-
 	
+	public static boolean newGame = false;
 	public static boolean clicked = false;
 	public static boolean vitP1 = false, vitP2 = false;
 
-	
-	public Tabuleiro tabuleiro;
-	
+	public static String gameState = "Normal", playerName="";
+	public static int modoJogo = 0; //aletra modo de jogo (1 e 0 por enquanto)
+	public static boolean p2 = false;
+
 	public Tabuleiro_Turbo tabuleiro_turbo;
+	public Tabuleiro tabuleiro;
+	public Menu menu;
+	public static Player player1, player2;
 	
 	public BufferedImage image = new BufferedImage(WIDTH, HEIGHT,BufferedImage.TYPE_INT_RGB);
 	
-	
-	
-	
+
 	public Game() {
 		
 		//EVENTOS DO MOUSE
@@ -50,9 +56,18 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		this.setFocusable(true);
 		this.addKeyListener(this);
 		
-		//tabuleiro = new Tabuleiro();
-		tabuleiro_turbo = new Tabuleiro_Turbo();
-	
+		player1 = new Player(1);
+		player2 = new Player(3);
+		
+		if(modoJogo==0) {
+			this.tabuleiro = new Tabuleiro();
+		}
+		
+		else if(modoJogo==1) {
+			this.tabuleiro_turbo = new Tabuleiro_Turbo();
+		}
+		
+		menu = new Menu();
 		
 		
 	}
@@ -74,11 +89,48 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	}
 	
 	public void update() {
-		tabuleiro_turbo.update_Turbo();	//trocar aq
-		if(vitP1) {
-			setVisible(false);
-			System.exit(0);
+		
+		if(gameState.equals("Menu")) {
+			
+			menu.update();
+			
+			//gameState = "Normal";
+			if(newGame) {
+				if(modoJogo==0) {
+					this.tabuleiro = new Tabuleiro();
+				}
+				
+				else if(modoJogo==1) {
+					this.tabuleiro_turbo = new Tabuleiro_Turbo();
+				}
+
+				newGame = false;
+			}
 		}
+		
+		else if(gameState.equals("Normal")) {
+			
+			if(modoJogo==0) {
+				this.tabuleiro.update();
+			}
+			
+			else if(modoJogo==1) {
+				this.tabuleiro_turbo.update();
+			}
+			
+				
+			if(vitP1 || vitP2) {
+				//GeraRanking(vitP1, vitP2);
+				gameState = "Game_Over";
+				vitP1 = vitP2 = false;
+			}
+		}
+		
+		else if(gameState.equals("Game_Over")) {
+			//gameState = "Menu";
+		}
+		
+		
 	}
 	
 	
@@ -88,18 +140,38 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		if(bs == null) {
 			this.createBufferStrategy(3);
 			return;
-		}
-		
+		}	
 		Graphics g =image.getGraphics();
-		
-		//Renderização(início)
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		tabuleiro_turbo.render_Turbo(g); //TROCAR AQ
-		//Renderização(fim)
+		
+		if(gameState.equals("Normal")) {
+			if(modoJogo==0) {
+				this.tabuleiro.render(g);
+			}
+			
+			else if(modoJogo==1) {
+				this.tabuleiro_turbo.render(g);
+			}
+		}
+		
 		
 		g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0,WIDTH*SCALE, HEIGHT*SCALE ,null);
+		
+		if(gameState.equals("Menu")) {
+			menu.render(g);
+		}
+		
+		else if(gameState.equals("Game_Over")) {
+			Graphics2D g2 = (Graphics2D)g;
+			g2.setColor(new Color(0,0,0,100));
+			g2.fillRect(0, 0, WIDTH*SCALE, HEIGHT*SCALE);
+			g2.setFont(new Font("arial", Font.BOLD, 28));
+			g.setColor(Color.white);
+			String linha1 = "Fim de jogo, vitoria de Jorginho";
+			g.drawString(linha1, (WIDTH*SCALE)/2, HEIGHT*SCALE/2);
+		}
 		
 		bs.show();
 	}
@@ -180,19 +252,60 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		
 		@Override
 	public void keyPressed(KeyEvent e) {
+			
+			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+				if(gameState == "Menu") {
+					menu.enter = true;
+				}
+			}
+				
+			else if(e.getKeyCode() == KeyEvent.VK_UP) {
+
+				if(gameState == "Menu") {
+					menu.up = true;
+				}
+				
+			}	
+				
+			else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				if(gameState == "Menu") {
+					menu.down = true;
+				}
+			}
+			
+			else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+				if(gameState == "Menu") {
+					menu.left = true;
+				}
+			}
+			
+			else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				if(gameState == "Menu") {
+					menu.right = true;
+				}
+			}
 
 		}
 		
 		@Override
 	public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
+		
 			
 		}
 		
 		@Override
 	public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
-			
+			if(menu.writeNameP1 || menu.writeNameP2) {
+				char c = e.getKeyChar();
+				if (Character.isAlphabetic(c) || Character.isDigit(c)) {
+					if(playerName.length()<=13) {
+						playerName += c;
+					}
+                   
+                } else if (c == KeyEvent.VK_BACK_SPACE && playerName.length() > 0) {
+                	playerName = playerName.substring(0, playerName.length() - 1);
+                }
+			}
 		}
 	
 }

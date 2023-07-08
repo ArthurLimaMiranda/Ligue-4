@@ -19,6 +19,14 @@ public class Entity {
 		this.sprite = sprite;
 	}
 	
+	public void setSprite(BufferedImage sprite) {
+		this.sprite = sprite;
+	}
+	
+	public  BufferedImage getSprite() {
+		return this.sprite;
+	}
+	
 	public int getX() {
 		return this.x;
 	}

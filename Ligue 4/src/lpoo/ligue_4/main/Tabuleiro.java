@@ -30,9 +30,7 @@ public class Tabuleiro {
 	
 	protected int nRounds = 42;
 	
-	protected int Round = 1;
-	protected boolean P2 = true;
-	
+	protected int Round = 1;	
 	
 	 
 	public Tabuleiro() {
@@ -43,10 +41,10 @@ public class Tabuleiro {
 		
 		for (int a = 0; a < nRounds; a++) {
 			
-			if (a % 2 != 0 && P2 == true) {			
+			if (a % 2 != 0 && Game.player2.getTipo() == 2) {			
 				fichas.add(new Ficha(2, 0, 0, 32, 32, spritesheet.getSprite(32*2, 0, 32, 32)));	
 			}
-			else if (a % 2 != 0 && P2 == false) {		
+			else if (a % 2 != 0 && Game.player2.getTipo() == 3) {		
 				fichas.add(new Ficha(3, 0, 0, 32, 32, spritesheet.getSprite(32*3, 0, 32, 32)));
 			}
 			else {		
@@ -134,7 +132,7 @@ public class Tabuleiro {
 			}
 			//Insere a coluna e a linha no tabuleiro
 			if(chosen && !drop && !buxinCheio[colunaChosen]) {
-				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).modelo;
+				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();
 				
 				if(dropTo == 0) {
 					buxinCheio[colunaChosen] = true;
@@ -202,10 +200,7 @@ public class Tabuleiro {
 					}
 				}
 			}
-		}
-		
-		
-		
+		}	
 	}
 
 	public int ChecarWin(int linha, int coluna) {

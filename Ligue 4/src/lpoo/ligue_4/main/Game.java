@@ -33,8 +33,8 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	public static boolean clicked = false;
 	public static boolean vitP1 = false, vitP2 = false;
 
-	public static String gameState = "Normal", playerName="";
-	public static int modoJogo = 1; //aletra modo de jogo (1 e 0 por enquanto)
+	public static String gameState = "Menu", playerName="";
+	public static int modoJogo = 0; //aletra modo de jogo (1 e 0 por enquanto)
 	public static boolean p2 = false;
 
 	public Tabuleiro_Turbo tabuleiro_turbo;
@@ -44,7 +44,10 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	
 	public BufferedImage image = new BufferedImage(WIDTH, HEIGHT,BufferedImage.TYPE_INT_RGB);
 	
-
+	private boolean press = false;
+	private int framesPress = 0;
+	
+	
 	public Game() {
 		
 		//EVENTOS DO MOUSE
@@ -57,16 +60,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		this.addKeyListener(this);
 		
 		player1 = new Player(1);
-		player2 = new Player(3);
-		
-		if(modoJogo==0) {
-			this.tabuleiro = new Tabuleiro();
-		}
-		
-		else if(modoJogo==1) {
-			this.tabuleiro_turbo = new Tabuleiro_Turbo();
-		}
-		
+		player2 = new Player(2);
 		menu = new Menu();
 		
 		
@@ -91,10 +85,9 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	public void update() {
 		
 		if(gameState.equals("Menu")) {
-			
+			vitP1 = vitP2 = false;
 			menu.update();
 			
-			//gameState = "Normal";
 			if(newGame) {
 				if(modoJogo==0) {
 					this.tabuleiro = new Tabuleiro();
@@ -122,15 +115,18 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 			if(vitP1 || vitP2) {
 				//GeraRanking(vitP1, vitP2);
 				gameState = "Game_Over";
-				vitP1 = vitP2 = false;
+				
 			}
 		}
 		
 		else if(gameState.equals("Game_Over")) {
-			//gameState = "Menu";
-		}
-		
-		
+			framesPress++;
+			if(framesPress>=35) {
+				framesPress=0;
+				press = !press;
+				
+			}
+		}			
 	}
 	
 	
@@ -164,13 +160,31 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		}
 		
 		else if(gameState.equals("Game_Over")) {
+			
 			Graphics2D g2 = (Graphics2D)g;
 			g2.setColor(new Color(0,0,0,100));
 			g2.fillRect(0, 0, WIDTH*SCALE, HEIGHT*SCALE);
 			g2.setFont(new Font("arial", Font.BOLD, 28));
-			g.setColor(Color.white);
-			String linha1 = "Fim de jogo, vitoria de Jorginho";
-			g.drawString(linha1, (WIDTH*SCALE)/2, HEIGHT*SCALE/2);
+			g2.setColor(Color.white);
+			
+			String linha1 = "Fim de jogo, vitoria";
+			if(vitP1) {
+				linha1+= " de: "+ player1.getNome();
+			}
+			else if(player2.getTipo()==2) {
+				linha1+= " de: "+player2.getNome();
+			}
+			else {
+				linha1+= " do computador";
+			}
+			
+			g2.drawString(linha1, (WIDTH*SCALE)/2-205-(linha1.length()/2), HEIGHT*SCALE/2-30);
+			
+			if(press) {
+				g2.setColor(Color.gray);
+				g2.setFont(new Font("arial", Font.BOLD, 20));
+				g2.drawString(">Pressione qualquer tecla para continuar<", (WIDTH*SCALE)/2-198, HEIGHT*SCALE/2+90);
+			}
 		}
 		
 		bs.show();
@@ -252,6 +266,14 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		
 		@Override
 	public void keyPressed(KeyEvent e) {
+			
+			if(gameState.equals("Game_Over")){
+				gameState = "Menu";
+				player1 = new Player(1);
+				player2 = new Player(2);
+				menu = new Menu();
+				modoJogo=0;
+			}
 			
 			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 				if(gameState == "Menu") {

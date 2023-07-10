@@ -133,7 +133,17 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 								e.setModelo(fichas.get(Round-1).getModelo());
 								e.setSprite(fichas.get(Round-1).getSprite());
 							}
-						}	
+						}
+						
+						int vit1 = ChecarWin(dropTo, colunaChosen-1);	
+						if(vit1!=0) {
+							if(vit1==1) {
+								Game.vitP1 = true;
+							}
+							else {
+								Game.vitP2 = true;
+							}
+						}
 					}
 					
 					if(trocar_right) {
@@ -145,16 +155,32 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 								e.setModelo(fichas.get(Round-1).getModelo());
 								e.setSprite(fichas.get(Round-1).getSprite());
 							}
-						}	
+						}
+						
+						int vit2 = ChecarWin(dropTo, colunaChosen+1);	
+						if(vit2!=0) {
+							if(vit2==1) {
+								Game.vitP1 = true;
+							}
+							else {
+								Game.vitP2 = true;
+							}
+						}
 					}
 					
 				}
 				
 				
-				if(ChecarWin(dropTo, colunaChosen)!=0) {
-					Game.vitP1 = true;
-					System.out.println("WINNNN");
-					
+				//TO DO: Checar condicao de empate
+				
+				int vit = ChecarWin(dropTo, colunaChosen);
+				if(vit!=0) {
+					if(vit==1) {
+						Game.vitP1 = true;
+					}
+					else {
+						Game.vitP2 = true;
+					}
 				}
 
 				Round++;

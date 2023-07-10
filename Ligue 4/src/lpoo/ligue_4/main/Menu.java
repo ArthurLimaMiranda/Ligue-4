@@ -12,6 +12,10 @@ public class Menu {
 	private String modoJogo="Modo Normal";
 	public boolean up, down, left, right, enter, writeNameP1=false, writeNameP2=false;
 	
+	public void setTela(int tela) {
+		this.tela=tela;
+	}
+	
 	
 	public void update() {
 		
@@ -123,6 +127,18 @@ public class Menu {
 						writeNameP2 = false;
 						Game.player2.setNome(Game.playerName);
 						Game.playerName = "";
+					}
+				}
+				
+				else if(choice==3) {
+					if(Game.player1.getNome()!="" && (!Game.p2 || Game.player2.getNome()!="")) {
+						if(!Game.p2) {
+							Game.player2.setTipo(3);
+						}
+						
+						Game.newGame = true;
+						Game.gameState="Normal";
+						
 					}
 				}
 				

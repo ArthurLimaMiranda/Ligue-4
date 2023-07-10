@@ -2,7 +2,9 @@ package lpoo.ligue_4.main;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -147,8 +149,14 @@ public class Tabuleiro {
 				Round++;
 				chosen = false;
 				
-				if(ChecarWin(dropTo, colunaChosen)!=0) {
-					Game.vitP1 = true;
+				int vit = ChecarWin(dropTo, colunaChosen);
+				if(vit!=0) {
+					if(vit==1) {
+						Game.vitP1 = true;
+					}
+					else {
+						Game.vitP2 = true;
+					}
 				}
 				
 				System.out.println(Round);
@@ -159,6 +167,7 @@ public class Tabuleiro {
 	}
 	
 	public void render(Graphics g) {
+
 		for(int x = 0; x < Width; x++) {
 			for(int y = 0; y < Height; y++) {
 				
@@ -169,6 +178,8 @@ public class Tabuleiro {
 					Entity e = fichas.get(i);
 					e.render(g);
 				}
+				
+				
 				
 				cor = cores[Round- 1];
 				fichaAr = new Ficha(cor, 0, 0, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
@@ -203,31 +214,30 @@ public class Tabuleiro {
 					}
 				}
 			}
-		}	
+		}
 	}
 
 	public int ChecarWin(int linha, int coluna) {
 
 		int slot0, slot01, slot02, slot03, slot04;
-		int slot01_left, slot02_left, slot03_left, slot04_left;
-		int slot01_right, slot02_right, slot03_right, slot04_right;
 		slot0 = TABULEIRO[coluna][linha];
 		int xRel, yRel, sequencia;
 		boolean sair;
 		
-		//Win na Linha				
-		for (int x = 0 ; x < Width-3 ; x ++) {						
+		//Win na Linha Geral			
+		for(int y=0; y<Height; y++) {
+			for (int x = 0 ; x < Width-3 ; x ++) {						
+				slot01 = TABULEIRO[x][y];
+				slot02 = TABULEIRO[x+1][y];
+				slot03 = TABULEIRO[x+2][y];
+				slot04 = TABULEIRO[x+3][y];
 
-			slot01 = TABULEIRO[x][linha];
-			slot02 = TABULEIRO[x+1][linha];
-			slot03 = TABULEIRO[x+2][linha];
-			slot04 = TABULEIRO[x+3][linha];
+				if ((slot01!=0) && (slot01==slot02) && (slot02==slot03) && (slot03==slot04)) {
 
-			if ((slot01==slot0) && (slot02==slot0) && (slot03==slot0) && (slot04==slot0)) {
-
-				System.out.println("Win linha P:" + slot0);
-				return slot0;
-			}				 			
+					System.out.println("Win linha P:" + slot01);
+					return slot01;
+				}				 			
+			}
 		}
 		
 		// Win na Coluna Geral
@@ -238,15 +248,14 @@ public class Tabuleiro {
 				slot03 = TABULEIRO[x][y+2];
 				slot04 = TABULEIRO[x][y+3];
 
-				if ((slot01==slot0) && (slot02==slot0) && (slot03==slot0) && (slot04==slot0)) {
+				if ((slot01!=0) && (slot01==slot02) && (slot02==slot03) && (slot03==slot04)) {
 
-					System.out.println("Win coluna P:" + slot0);
-					return slot0;
-			}				 		
+					System.out.println("Win coluna P:" + slot01);
+					return slot01;
+				}				 		
+			}
 		}
-		}
-		
-		
+
 		//Win Diagona Principal
 		xRel = coluna;
 		yRel = linha;
@@ -322,10 +331,6 @@ public class Tabuleiro {
 			System.out.println("Win digSec P:" + slot0);
 			return slot0;
 		}
-		
-		
-
-
 		return 0;
 	}
 }

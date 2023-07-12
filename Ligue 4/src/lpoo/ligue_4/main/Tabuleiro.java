@@ -32,7 +32,7 @@ public class Tabuleiro {
 	
 	protected int nRounds = 42;
 	
-	protected int Round = 1;	
+	protected int Round = 1;	//Round inicial
 	
 
 	 
@@ -65,7 +65,7 @@ public class Tabuleiro {
 			buxinCheio[a] = false;
 		}
  	
-		//Adiciona as fichas a cada Round					
+		//Adiciona as fichas a cada Round com as cores certas					
 
 	}
 	
@@ -160,7 +160,7 @@ public class Tabuleiro {
 				}
 				
 				System.out.println(Round);
-				//System.out.println("aynaaa");
+				
 			}
 		}
 		// AQ

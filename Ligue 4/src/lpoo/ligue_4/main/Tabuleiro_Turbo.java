@@ -119,12 +119,9 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 				fichas.get(Round-1).setY((dropTo*tileSize)+Game.HEIGHT/offSet);
 				
 
-				//ModoTurbo(dropTo,colunaChosen);// N é a música da luisa sonsa
-				
-
-				if(ModoTurbo(colunaChosen, dropTo)) {
+				if(ModoTurbo(colunaChosen, dropTo)) { // Aciona o Modo Turbo
 					
-					if(trocar_left) {
+					if(trocar_left) { // Troca a ficha da esquerda
 						TABULEIRO[colunaChosen-1][dropTo] = fichas.get(Round-1).getModelo();
 						for(int i=0;  i<fichas.size(); i++) {
 							Ficha e = fichas.get(i);
@@ -146,7 +143,7 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 						}
 					}
 					
-					if(trocar_right) {
+					if(trocar_right) {// Troca a ficha da direita
 						TABULEIRO[colunaChosen+1][dropTo] = fichas.get(Round-1).getModelo();
 						for(int i=0;  i<fichas.size(); i++) {
 							Ficha e = fichas.get(i);
@@ -252,12 +249,12 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 		int Slot_Centro = TABULEIRO[coluna][linha];
 		int Slot_Esquerda,Slot_Direita;	
 		
-		if (coluna == Width-1) {			
+		if (coluna == Width-1) {	// fim do tabuleiro		
 			  Slot_Direita = Slot_Centro;
 			  Slot_Esquerda = TABULEIRO[coluna-1][linha]; 
 		}
 		
-		else if(coluna == 0) {
+		else if(coluna == 0) {	 // fim do tabuleiro
 			 Slot_Esquerda = Slot_Centro;
 			 Slot_Direita = TABULEIRO[coluna+1][linha];	 
 		}

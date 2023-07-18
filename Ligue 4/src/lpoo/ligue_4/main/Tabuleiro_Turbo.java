@@ -10,7 +10,7 @@ import lpoo.ligue_4.grafs.Spritesheet;
 
 public class Tabuleiro_Turbo extends Tabuleiro {
 
-	public boolean trocar, trocar_left, trocar_right;
+	private boolean trocar, trocar_left, trocar_right;
 
 	public Tabuleiro_Turbo() {
 		

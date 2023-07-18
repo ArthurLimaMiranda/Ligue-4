@@ -13,7 +13,7 @@ public class Ficha extends Entity{
 		this.modelo = modelo;
 	}
 	
-	public void setModelo(int model) {
+	public void setModelo(int modelo) {
 		this.modelo = modelo;
 	}
 	

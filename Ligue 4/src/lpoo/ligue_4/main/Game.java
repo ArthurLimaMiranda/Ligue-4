@@ -34,9 +34,10 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	public static boolean vitP1 = false, vitP2 = false;
 
 	public static String gameState = "Menu", playerName="";
-	public static int modoJogo = 0; //aletra modo de jogo (1 e 0 ))
+	public static int modoJogo = 0; //aletra modo de jogo (2 ou 1 ou 0 )
 	public static boolean p2 = false;
 
+	public Tabuleiro_Maluco tabuleiro_maluco;
 	public Tabuleiro_Turbo tabuleiro_turbo;
 	public Tabuleiro tabuleiro;
 	public Menu menu;
@@ -96,6 +97,9 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 				else if(modoJogo==1) { //Modo Turbo on
 					this.tabuleiro_turbo = new Tabuleiro_Turbo();
 				}
+				else if(modoJogo == 2) {//Modo Turbo Maluco
+					this.tabuleiro_maluco = new Tabuleiro_Maluco();
+				}
 
 				newGame = false;
 			}
@@ -109,6 +113,9 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 			
 			else if(modoJogo==1) {
 				this.tabuleiro_turbo.update();
+			}
+			else if(modoJogo== 2) {
+				this.tabuleiro_maluco.update();
 			}
 			
 				
@@ -148,6 +155,9 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 			
 			else if(modoJogo==1) {
 				this.tabuleiro_turbo.render(g);
+			}
+			else if(modoJogo== 2) {
+				this.tabuleiro_maluco.render(g);
 			}
 		}
 		

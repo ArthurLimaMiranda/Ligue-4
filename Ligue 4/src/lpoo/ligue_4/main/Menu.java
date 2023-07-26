@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 
 public class Menu {
 
-	private int choice=0, coluna=0, tela=0, options=4, linhaMax=4, maxColuna=2, modosDeJogo=2;
+	private int choice=0, coluna=0, tela=0, options=4, linhaMax=4, maxColuna=2, modosDeJogo=3;
 	private int[] maxChoice = {options-1, linhaMax};
 	private String modoJogo="Modo Normal";
 	public boolean up, down, left, right, enter, writeNameP1=false, writeNameP2=false;
@@ -54,7 +54,7 @@ public class Menu {
 						Game.p2 = !Game.p2;
 					}
 					
-					else if(choice==2) {
+					else if(choice==3) {
 						Game.modoJogo--;
 						if(Game.modoJogo<0) {
 							Game.modoJogo=modosDeJogo-1;
@@ -244,7 +244,11 @@ public class Menu {
 				else if(Game.modoJogo==1) {
 					modoJogo = "Modo Turbo";
 					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-75, (Game.HEIGHT*Game.SCALE)/2+110);
-				}	
+				}
+				else if(Game.modoJogo == 2) {
+					modoJogo = "Modo Turbo Maluco";
+					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-75, (Game.HEIGHT*Game.SCALE)/2+110);
+				}
 			}
 			
 			else {
@@ -255,6 +259,10 @@ public class Menu {
 				else if(Game.modoJogo==1) {
 					modoJogo = "Modo Turbo";
 					g.drawString(">"+modoJogo+"<", (Game.WIDTH*Game.SCALE)/2-68, (Game.HEIGHT*Game.SCALE)/2+110);
+				}
+				else if(Game.modoJogo == 2) {
+					modoJogo = "Modo Turbo Maluco";
+					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-75, (Game.HEIGHT*Game.SCALE)/2+110);
 				}
 			}
 			

@@ -122,6 +122,8 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 			//Insere a coluna e a linha no tabuleiro
 			if(chosen && !drop && !buxinCheio[colunaChosen]) {
 				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();
+				fichas.get(Round-1).setID(colunaChosen, dropTo);//HERE
+				
 				
 				if(dropTo == 0) {
 					buxinCheio[colunaChosen] = true;
@@ -130,31 +132,42 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 				fichas.get(Round-1).setX((colunaChosen*tileSize)+Game.WIDTH/offSet);
 				fichas.get(Round-1).setY((dropTo*tileSize)+Game.HEIGHT/offSet);
 				
-				Round++;
-				chosen = false;
+				//Round++;
+				//chosen = false;
 				
 				
 				CrazynessLevel();
-				//ATIVA MODO MALUCO!!
-				if(Crazyness == true) {
-					Modo_Maluco(dropTo,colunaChosen);
+				
+				try {
 					
-					if(trocar == true) {
-						// BOTAR ALGO AQ
-						TABULEIRO[X_Maluco][Y_Maluco] = fichas.get(Round-1).getModelo();
+					if(Crazyness == true) {
+						Modo_Maluco(dropTo,colunaChosen);
 						
-						
-						//ARTHUR BOTA ALGO AQUI PRA RENDEZIRAR A PEÇA EH ISSO
-						
-						/*for(int i=0;  i<fichas.size(); i++) {
-							Ficha e = fichas.get(i);
-							int[] id = e.getID();
-							if((id[0] == X_Maluco) && (id[1] == Y_Maluco)) {
-								e.setModelo(fichas.get(Round-1).getModelo());
-								e.setSprite(fichas.get(Round-1).getSprite());
-							}*/
+						if(trocar == true) {
+							// BOTAR ALGO AQ
+							TABULEIRO[X_Maluco][Y_Maluco] = fichas.get(Round-1).getModelo();
+							
+							//HERE
+							for(int i=0;  i<fichas.size(); i++) {
+								Ficha e = fichas.get(i);
+								int[] id = e.getID();
+								if( ((id[0] == X_Maluco) && (id[1] == dropTo))|| ((id[1] == colunaChosen) && (id[0] == Y_Maluco)) ) {
+									e.setModelo(fichas.get(Round-1).getModelo());
+									e.setSprite(fichas.get(Round-1).getSprite());
+								}
+							}
+							
+							//ARTHUR BOTA ALGO AQUI PRA RENDEZIRAR A PEÇA EH ISSO
+							
+							
+						}
 					}
+					
+				} catch (UShouldNotBeHere  e) {
+					System.out.println("YOU SHOULDN´T BE HERE!");
 				}
+				//ATIVA MODO MALUCO!!
+				
 				
 				int vit = ChecarWin(dropTo, colunaChosen);
 				if(vit!=0) {
@@ -168,6 +181,8 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 					}
 				}
 				
+				Round++;//HERE
+				chosen = false;
 				System.out.println(Round);
 				 
 				
@@ -230,7 +245,7 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 		}
 	}
 
-	public void Modo_Maluco(int linha, int coluna) {
+	public void Modo_Maluco(int linha, int coluna) throws UShouldNotBeHere{
 		
 		int Slot_Central = TABULEIRO[coluna][linha];
 		
@@ -241,21 +256,29 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 		
 		trocar = false;
 														
-			if(Crazy_coluna == Width ) {// fim do tabuleiro	
-				Crazy_coluna = coluna;
-				Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
+			if(Crazy_coluna >= Width ) {// fim do tabuleiro	
+				//Crazy_coluna = coluna;
+				//Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
+				UShouldNotBeHere e = new UShouldNotBeHere();
+				throw e;
 			}
-			if(Crazy_coluna == 0) {// fim do tabuleiro
-				Crazy_coluna = coluna;
-				Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
+			if(Crazy_coluna <= 0) {// fim do tabuleiro
+				//Crazy_coluna = coluna;
+				//Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
+				UShouldNotBeHere e = new UShouldNotBeHere();
+				throw e;
 			}
-			if(Crazy_linha == Height ) {// fim do tabuleiro
-				Crazy_linha = linha;
-				Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
+			if(Crazy_linha >= Height ) {// fim do tabuleiro
+				//Crazy_linha = linha;
+				//Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
+				UShouldNotBeHere e = new UShouldNotBeHere();
+				throw e;
 			}
-			if(Crazy_linha == 0) {// fim do tabuleiro
-				Crazy_linha = linha;
-				Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
+			if(Crazy_linha <= 0) {// fim do tabuleiro
+				//Crazy_linha = linha;
+				//Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
+				UShouldNotBeHere e = new UShouldNotBeHere();
+				throw e;
 			}
 			else {
 				 Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
@@ -285,12 +308,13 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 		
 	}
 	
+	//Nivel de loucura
 	public void CrazynessLevel() {
 		
 		Crazyness = false;
 		int CrazynesLevel = random.nextInt(5);
 		
-		if(CrazynesLevel > 2) {
+		if(CrazynesLevel >= 2) {
 			Crazyness = true;
 		}
 		else {

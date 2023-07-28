@@ -119,53 +119,63 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 				fichas.get(Round-1).setY((dropTo*tileSize)+Game.HEIGHT/offSet);
 				
 
-				if(ModoTurbo(colunaChosen, dropTo)) { // Aciona o Modo Turbo
+				try {
+				    // Some code that may throw UShouldNotBeHere exception
+				    // ...
 					
-					if(trocar_left) { // Troca a ficha da esquerda
-						TABULEIRO[colunaChosen-1][dropTo] = fichas.get(Round-1).getModelo();
-						for(int i=0;  i<fichas.size(); i++) {
-							Ficha e = fichas.get(i);
-							int[] id = e.getID();
-							if((id[0] == colunaChosen-1) && (id[1] == dropTo)) {
-								e.setModelo(fichas.get(Round-1).getModelo());
-								e.setSprite(fichas.get(Round-1).getSprite());
+					if(ModoTurbo(colunaChosen, dropTo)) { // Aciona o Modo Turbo
+						
+						if(trocar_left) { // Troca a ficha da esquerda
+							TABULEIRO[colunaChosen-1][dropTo] = fichas.get(Round-1).getModelo();
+							for(int i=0;  i<fichas.size(); i++) {
+								Ficha e = fichas.get(i);
+								int[] id = e.getID();
+								if((id[0] == colunaChosen-1) && (id[1] == dropTo)) {
+									e.setModelo(fichas.get(Round-1).getModelo());
+									e.setSprite(fichas.get(Round-1).getSprite());
+								}
+							}
+							
+							int vit1 = ChecarWin(dropTo, colunaChosen-1);	
+							if(vit1!=0) {
+								if(vit1==1) {
+									Game.vitP1 = true;
+								}
+								else {
+									Game.vitP2 = true;
+								}
 							}
 						}
 						
-						int vit1 = ChecarWin(dropTo, colunaChosen-1);	
-						if(vit1!=0) {
-							if(vit1==1) {
-								Game.vitP1 = true;
+						if(trocar_right) {// Troca a ficha da direita
+							TABULEIRO[colunaChosen+1][dropTo] = fichas.get(Round-1).getModelo();
+							for(int i=0;  i<fichas.size(); i++) {
+								Ficha e = fichas.get(i);
+								int[] id = e.getID();
+								if((id[0] == colunaChosen+1) && (id[1] == dropTo)) {
+									e.setModelo(fichas.get(Round-1).getModelo());
+									e.setSprite(fichas.get(Round-1).getSprite());
+								}
 							}
-							else {
-								Game.vitP2 = true;
-							}
-						}
-					}
-					
-					if(trocar_right) {// Troca a ficha da direita
-						TABULEIRO[colunaChosen+1][dropTo] = fichas.get(Round-1).getModelo();
-						for(int i=0;  i<fichas.size(); i++) {
-							Ficha e = fichas.get(i);
-							int[] id = e.getID();
-							if((id[0] == colunaChosen+1) && (id[1] == dropTo)) {
-								e.setModelo(fichas.get(Round-1).getModelo());
-								e.setSprite(fichas.get(Round-1).getSprite());
+							
+							int vit2 = ChecarWin(dropTo, colunaChosen+1);	
+							if(vit2!=0) {
+								if(vit2==1) {
+									Game.vitP1 = true;
+								}
+								else {
+									Game.vitP2 = true;
+								}
 							}
 						}
 						
-						int vit2 = ChecarWin(dropTo, colunaChosen+1);	
-						if(vit2!=0) {
-							if(vit2==1) {
-								Game.vitP1 = true;
-							}
-							else {
-								Game.vitP2 = true;
-							}
-						}
 					}
-					
+				} catch (UShouldNotBeHere e) {
+				  System.out.println("YOU SHOULDN´T BE HERE!");						
 				}
+			
+				
+				
 				
 				
 				//TO DO: Checar condicao de empate
@@ -244,24 +254,31 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 		
 	
 	
-	public boolean ModoTurbo(int coluna, int linha) {
+	public boolean ModoTurbo(int coluna, int linha) throws UShouldNotBeHere{
 			
 		int Slot_Centro = TABULEIRO[coluna][linha];
 		int Slot_Esquerda,Slot_Direita;	
 		
 		if (coluna == Width-1) {	// fim do tabuleiro		
-			  Slot_Direita = Slot_Centro;
-			  Slot_Esquerda = TABULEIRO[coluna-1][linha]; 
+			 
+			  //Slot_Direita = Slot_Centro;
+			  //Slot_Esquerda = TABULEIRO[coluna-1][linha]; 
+			  UShouldNotBeHere e = new UShouldNotBeHere();
+			  throw e;
+			 
 		}
 		
 		else if(coluna == 0) {	 // fim do tabuleiro
-			 Slot_Esquerda = Slot_Centro;
-			 Slot_Direita = TABULEIRO[coluna+1][linha];	 
+			 //Slot_Esquerda = Slot_Centro;
+			 //Slot_Direita = TABULEIRO[coluna+1][linha];	
+			 UShouldNotBeHere e = new UShouldNotBeHere();
+			 throw e;
 		}
 		
 		else {		
 			 Slot_Esquerda = TABULEIRO[coluna -1][linha];
-			 Slot_Direita = TABULEIRO[coluna +1][linha];	 		 
+			 Slot_Direita = TABULEIRO[coluna +1][linha];
+			
 		}
 	 
 		trocar = false;

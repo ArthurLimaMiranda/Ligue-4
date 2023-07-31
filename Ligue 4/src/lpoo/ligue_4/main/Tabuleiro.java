@@ -69,6 +69,11 @@ public class Tabuleiro {
 
 	}
 	
+	public boolean getBuxinCheio(int a) {
+		
+		return buxinCheio[a];
+	}
+	
 	
 	
 	public void update() {

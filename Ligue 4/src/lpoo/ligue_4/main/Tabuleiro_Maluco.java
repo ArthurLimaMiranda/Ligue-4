@@ -257,26 +257,18 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 		trocar = false;
 														
 			if(Crazy_coluna >= Width ) {// fim do tabuleiro	
-				//Crazy_coluna = coluna;
-				//Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
 				UShouldNotBeHere e = new UShouldNotBeHere();
 				throw e;
 			}
 			if(Crazy_coluna <= 0) {// fim do tabuleiro
-				//Crazy_coluna = coluna;
-				//Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
 				UShouldNotBeHere e = new UShouldNotBeHere();
 				throw e;
 			}
 			if(Crazy_linha >= Height ) {// fim do tabuleiro
-				//Crazy_linha = linha;
-				//Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
 				UShouldNotBeHere e = new UShouldNotBeHere();
 				throw e;
 			}
 			if(Crazy_linha <= 0) {// fim do tabuleiro
-				//Crazy_linha = linha;
-				//Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
 				UShouldNotBeHere e = new UShouldNotBeHere();
 				throw e;
 			}

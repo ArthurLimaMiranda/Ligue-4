@@ -20,8 +20,16 @@ public class Player{
 		return this.tipo;
 	}
 	
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setNome(String nome) throws LimiteNome{
+		
+		if(nome.length() > 10) {
+			LimiteNome e = new LimiteNome();
+			throw e;
+		}
+		else {
+			this.nome = nome;
+			}
+						
 	}
 
 	public String getNome() {

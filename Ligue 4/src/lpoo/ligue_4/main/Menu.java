@@ -88,66 +88,74 @@ public class Menu {
 				}
 			}
 		}
-			
 		
-		if(enter) {
-			enter=false;
-			if(tela==0) {
-				if(choice==0) {
-					tela=1;
-					coluna=0;
-					Game.player1.setNome("");
-					Game.player2.setNome("");
-				}
-	
-				else if(choice==3) {
-					System.exit(1);
-				}
-			}
-			
-			else if(tela==1) {
-				if(choice==0) {
-					if(coluna==0 && !writeNameP1) {
-						Game.playerName = "";
-						writeNameP1=true;
+		try {
+			if(enter) {
+				enter=false;
+				if(tela==0) {
+					if(choice==0) {
+						tela=1;
+						coluna=0;
+						Game.player1.setNome("");
+						Game.player2.setNome("");
 					}
-					else if(coluna== 1 && !writeNameP2) {
-						Game.playerName = "";
-						writeNameP2=true;
-					}
-
-
-					if(writeNameP1 && coluna==0 && Game.playerName.length()>=1) {
-						writeNameP1 = false;
-						Game.player1.setNome(Game.playerName);
-						Game.playerName = "";
-					}
-					
-					else if(writeNameP2 && coluna==1 && Game.playerName.length()>=1) {
-						writeNameP2 = false;
-						Game.player2.setNome(Game.playerName);
-						Game.playerName = "";
+		
+					else if(choice==3) {
+						System.exit(1);
 					}
 				}
 				
-				else if(choice==3) {
-					if(Game.player1.getNome()!="" && (!Game.p2 || Game.player2.getNome()!="")) {
-						if(!Game.p2) {
-							Game.player2.setTipo(3);
+				else if(tela==1) {
+					if(choice==0) {
+						if(coluna==0 && !writeNameP1) {
+							Game.playerName = "";
+							writeNameP1=true;
+						}
+						else if(coluna== 1 && !writeNameP2) {
+							Game.playerName = "";
+							writeNameP2=true;
+						}
+
+
+						if(writeNameP1 && coluna==0 && Game.playerName.length()>=1) {
+							writeNameP1 = false;
+							Game.player1.setNome(Game.playerName);
+							Game.playerName = "";
 						}
 						
-						Game.newGame = true;
-						Game.gameState="Normal";
-						
+						else if(writeNameP2 && coluna==1 && Game.playerName.length()>=1) {
+							writeNameP2 = false;
+							Game.player2.setNome(Game.playerName);
+							Game.playerName = "";
+						}
+					}
+					
+					else if(choice==3) {
+						if(Game.player1.getNome()!="" && (!Game.p2 || Game.player2.getNome()!="")) {
+							if(!Game.p2) {
+								Game.player2.setTipo(3);
+							}
+							
+							Game.newGame = true;
+							Game.gameState="Normal";
+							
+						}
+					}
+					
+					else if(choice==4) {
+						tela=0;
+						choice=0;
 					}
 				}
-				
-				else if(choice==4) {
-					tela=0;
-					choice=0;
-				}
 			}
+		} catch (LimiteNome e) {
+			System.out.println("Nome Inválido");
 		}
+		
+		// AQ
+		
+		
+		// AQ
 	}
 	
 	public void render(Graphics g) {
@@ -189,32 +197,41 @@ public class Menu {
 			
 			g.drawRect((Game.WIDTH*Game.SCALE)/2-40+155, (Game.HEIGHT*Game.SCALE)/2-130, 180, 30);
 			
-			if(Game.p2) {
-				if(!writeNameP2) {
-					if(choice==0 && coluna==1) {
-						g.fillRect((Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-124, 171, 19);
+			
+			try {
+				if(Game.p2) {
+					if(!writeNameP2) {
+						if(choice==0 && coluna==1) {
+							g.fillRect((Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-124, 171, 19);
+						}
+						else {
+							g.drawString(Game.player2.getNome(), (Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-108);
+						}
 					}
-					else {
-						g.drawString(Game.player2.getNome(), (Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-108);
+					
+					else if(choice==0 && coluna==1 && writeNameP2) {
+						g.drawString(Game.playerName, (Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-108);
 					}
+					g.drawString("Nome p2", (Game.WIDTH*Game.SCALE)/2-40+200, (Game.HEIGHT*Game.SCALE)/2-75);
 				}
+										
 				
-				else if(choice==0 && coluna==1 && writeNameP2) {
-					g.drawString(Game.playerName, (Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-108);
+				else {
+					Game.player2.setNome("");
+					g.setColor(Color.gray);
+					g.fillRect((Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-124, 171, 19);
+					g.drawString("Nome p2", (Game.WIDTH*Game.SCALE)/2-40+200, (Game.HEIGHT*Game.SCALE)/2-75);
+					
+					g.setColor(Color.white);
 				}
-				g.drawString("Nome p2", (Game.WIDTH*Game.SCALE)/2-40+200, (Game.HEIGHT*Game.SCALE)/2-75);
+			} catch (LimiteNome e) {
+				System.out.println("Nome Inválido");
 			}
 			
-			else {
-				Game.player2.setNome("");
-				g.setColor(Color.gray);
-				g.fillRect((Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-124, 171, 19);
-				g.drawString("Nome p2", (Game.WIDTH*Game.SCALE)/2-40+200, (Game.HEIGHT*Game.SCALE)/2-75);
-				
-				g.setColor(Color.white);
-			}
+			//AQ
 			
 			
+			//AQ
 			if(choice==1) {
 				if(Game.p2) {
 					g.drawString("<  P v P  >", (Game.WIDTH*Game.SCALE)/2-50, (Game.HEIGHT*Game.SCALE)/2+55);

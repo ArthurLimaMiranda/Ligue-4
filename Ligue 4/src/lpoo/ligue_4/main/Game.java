@@ -5,7 +5,6 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -15,11 +14,13 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-import lpoo.ligue_4.main.Menu;
+import lpoo.ligue_4.board.Tabuleiro;
+import lpoo.ligue_4.board.Tabuleiro_Maluco;
+import lpoo.ligue_4.board.Tabuleiro_Turbo;
+import lpoo.ligue_4.exceptions.BusaoLotado;
 
 public  class Game extends Canvas implements Runnable, MouseMotionListener, MouseListener ,KeyListener {
 
@@ -34,7 +35,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	public static boolean vitP1 = false, vitP2 = false;
 
 	public static String gameState = "Menu", playerName="";
-	public static int modoJogo = 0; //aletra modo de jogo (2 ou 1 ou 0 )
+	public static int modoJogo = 0, dificuldade = 0;
 	public static boolean p2 = false;
 
 	public Tabuleiro_Maluco tabuleiro_maluco;
@@ -108,7 +109,11 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		else if(gameState.equals("Normal")) {
 			
 			if(modoJogo==0) {
-				this.tabuleiro.update();
+				try {
+					this.tabuleiro.update();
+				} catch (BusaoLotado e) {
+					e.printStackTrace();
+				}
 			}
 			
 			else if(modoJogo==1) {

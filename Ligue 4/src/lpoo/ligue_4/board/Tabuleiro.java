@@ -1,18 +1,17 @@
-package lpoo.ligue_4.main;
+package lpoo.ligue_4.board;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Random;
 
 import lpoo.ligue_4.entidades.Entity;
 import lpoo.ligue_4.entidades.Ficha;
+import lpoo.ligue_4.exceptions.BusaoLotado;
 import lpoo.ligue_4.grafs.Spritesheet;
+import lpoo.ligue_4.main.Game;
+import lpoo.ligue_4.main.MyRivalPC;
 
-public class Tabuleiro {
+public class Tabuleiro implements InterfaceTabuleiro{
 
 	public static final int Width = 7 , Height = 6, offSet = 3;
 	public static int[][]  TABULEIRO;
@@ -26,6 +25,7 @@ public class Tabuleiro {
 	protected Ficha fichaAr;
 	protected ArrayList<Ficha> fichas;
 	protected Spritesheet spritesheet;
+	protected MyRivalPC ia;
 	
 	protected int [] cores = new int [42]; // salvar as cores das fichas
 	protected int cor;
@@ -37,12 +37,11 @@ public class Tabuleiro {
 
 	 
 	public Tabuleiro() {
-		
-				
-		
+			
 		TABULEIRO = new int[Width][Height] ;
 		fichas = new ArrayList<Ficha>();
 		spritesheet = new Spritesheet("res/spritesheet.png");
+		ia = new MyRivalPC();
 		
 		for (int a = 0; a < nRounds; a++) {
 			
@@ -69,79 +68,104 @@ public class Tabuleiro {
 
 	}
 	
-	public boolean getBuxinCheio(int a) {
-		
-		return buxinCheio[a];
-	}
-	
-	
-	
-	public void update() {
+	public void update() throws BusaoLotado {
 		
 		
 		// AQ
 		if(!drop) {
-			
 			for(int i=0; i<fichas.size(); i++) {
 				Entity e = fichas.get(i);
 				e.update();
 			}
 			
-			
-			//Checa se o mouse se encontra dentro do tabuleiro e em qual coluna esta em cima
-			if((Game.xPos>Game.WIDTH/offSet) && (Game.xPos<((Width*tileSize)-3+Game.WIDTH/offSet)) &&
-			   (Game.yPos>=Game.HEIGHT/offSet) && (Game.yPos<=((Height*tileSize)+Game.HEIGHT/offSet))) {
-				coluna = (Game.xPos/tileSize)-(Game.WIDTH/tileSize/offSet);	
-				dentro = true;
-				
-				//Seleciona a coluna desejada
-				if(Game.clicked) {
-					Game.clicked = false;
-					if(!selected) {
-						selected = true;
-						colunaSelected = coluna;
-					}
+			if(Round%2!=0) {
+				//Checa se o mouse se encontra dentro do tabuleiro e em qual coluna esta em cima
+				if((Game.xPos>Game.WIDTH/offSet) && (Game.xPos<((Width*tileSize)-3+Game.WIDTH/offSet)) &&
+				   (Game.yPos>=Game.HEIGHT/offSet) && (Game.yPos<=((Height*tileSize)+Game.HEIGHT/offSet))) {
+					coluna = (Game.xPos/tileSize)-(Game.WIDTH/tileSize/offSet);	
+					dentro = true;
 					
-					//Confirma a coluna, ativando a animação de queda ou cancela a seleção
-					else {
-						if(coluna == colunaSelected) {
-							colunaChosen = colunaSelected;
-							colunaSelected = -1;
-							chosen = true;
-							selected = false;
-							//Checa se há alguma linha vazia na coluna desejada
-							for(int lines=Height-1; lines>=0; lines--) {
-								if(TABULEIRO[colunaChosen][lines] == 0) {
-									dropTo = lines;
-									break;
+					//Seleciona a coluna desejada
+					if(Game.clicked) {
+						Game.clicked = false;
+						if(!selected) {
+							selected = true;
+							colunaSelected = coluna;
+						}
+						
+						//Confirma a coluna, ativando a animação de queda ou cancela a seleção
+						else {
+							if(coluna == colunaSelected) {
+								colunaChosen = colunaSelected;
+								colunaSelected = -1;
+								chosen = true;
+								selected = false;
+								//Checa se há alguma linha vazia na coluna desejada
+								for(int lines=Height-1; lines>=0; lines--) {
+									if(TABULEIRO[colunaChosen][lines] == 0) {
+										dropTo = lines;
+										break;
+									}
+									
+								}
+								if(!buxinCheio[colunaChosen]) {
+									drop = true;
+									dropping = 0;
+									System.out.println("Coluna: "+colunaChosen);
+								}
+								else {
+									chosen = false;
+									selected = false;
 								}
 								
-							}
-							if(!buxinCheio[colunaChosen]) {
-								drop = true;
-								dropping = 0;
-								System.out.println("Coluna: "+colunaChosen);
 							}
 							else {
 								chosen = false;
 								selected = false;
 							}
-							
-						}
-						else {
-							chosen = false;
-							selected = false;
 						}
 					}
+					
+				}
+						
+				else {
+					dentro = false;
+				}
+			}
+			
+			else {
+				if(Game.dificuldade == 0 && !chosen) {
+					colunaChosen = ia.EasyPeasy(this.buxinCheio);
+					colunaSelected = -1;
+					chosen = true;
+					selected = false;
+					//Checa se há alguma linha vazia na coluna desejada
+					for(int lines=Height-1; lines>=0; lines--) {
+						if(TABULEIRO[colunaChosen][lines] == 0) {
+							dropTo = lines;
+							break;
+						}
+						
+					}
+					
+					drop = true;
+					dropping = 0;
+					System.out.println("Coluna: "+colunaChosen);
+
 				}
 				
-			}
+				else if(Game.dificuldade == 1) {
+									
+				}
+				
+				else {
 					
-			else {
-				dentro = false;
+				}
 			}
+			
 			//Insere a coluna e a linha no tabuleiro
 			if(chosen && !drop && !buxinCheio[colunaChosen]) {
+				System.out.println("OI");
 				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();
 				
 				if(dropTo == 0) {
@@ -338,6 +362,7 @@ public class Tabuleiro {
 		}
 		return 0;
 	}
+
 }
 
 

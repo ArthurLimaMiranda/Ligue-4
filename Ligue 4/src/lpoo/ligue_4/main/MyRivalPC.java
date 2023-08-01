@@ -3,22 +3,21 @@ package lpoo.ligue_4.main;
 
 import java.util.Random;
 
+import lpoo.ligue_4.board.Tabuleiro;
+import lpoo.ligue_4.exceptions.BusaoLotado;
+import lpoo.ligue_4.exceptions.UShouldNotBeHere;
+
 public class MyRivalPC {
 	
-	private Random random;
+	private Random random = new Random();
 	private int ColunaRival;
 	
-	Tabuleiro tabuleiro;
 	
-	
-	public int EasyPeasy(int coluna) throws BusaoLotado{
-				
-		ColunaRival = random.nextInt(7);
-		
-		
-		if(tabuleiro.getBuxinCheio(ColunaRival)== true) {
+	public int EasyPeasy(boolean[] colunasStatus) throws BusaoLotado{
 			
-			while(tabuleiro.getBuxinCheio(ColunaRival)== true) {			
+		ColunaRival = random.nextInt(7);
+		if(colunasStatus[ColunaRival]== true) {			
+			while(colunasStatus[ColunaRival]== true) {			
 				ColunaRival = random.nextInt(7);
 				BusaoLotado e = new BusaoLotado();
 				throw e;
@@ -29,7 +28,7 @@ public class MyRivalPC {
 		
 	}
 	
-	public int DontLetUWin(int coluna) throws BusaoLotado,UShouldNotBeHere{
+	public int INEVERGonnaLetUWin(int coluna, boolean[] colunasStatus) throws BusaoLotado,UShouldNotBeHere{
 		
 		ColunaRival = coluna + random.nextInt(3) - 1;		
 		
@@ -42,9 +41,9 @@ public class MyRivalPC {
 			 throw e;
 		}
 		else {
-			if(tabuleiro.getBuxinCheio(ColunaRival)== true) {
+			if(colunasStatus[ColunaRival]== true) {
 				
-				while(tabuleiro.getBuxinCheio(ColunaRival)== true) {			
+				while(colunasStatus[ColunaRival]== true) {			
 					ColunaRival =  coluna + random.nextInt(3) - 1;
 					BusaoLotado e = new BusaoLotado();
 					throw e;
@@ -55,15 +54,5 @@ public class MyRivalPC {
 											
 		return ColunaRival;
 		
-	}
-	
-	
-	
-	
-	
-	public void INEVERGonnaLetUWin(int coluna) {
-		
-		//PINTE E O BORDE AQ SO N DEIXE O CARA GANHAR
-	}
-	
+	}	
 }

@@ -3,7 +3,7 @@ package lpoo.ligue_4.entidades;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-public class Entity {
+public abstract class Entity {
 	private int x;
 	private int y;
 	private int width;

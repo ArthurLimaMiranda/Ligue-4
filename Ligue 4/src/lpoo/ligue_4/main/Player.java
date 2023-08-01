@@ -1,5 +1,7 @@
 package lpoo.ligue_4.main;
 
+import lpoo.ligue_4.exceptions.LimiteNome;
+
 public class Player{
 
 	

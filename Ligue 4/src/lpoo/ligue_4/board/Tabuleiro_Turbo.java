@@ -1,29 +1,20 @@
-package lpoo.ligue_4.main;
+package lpoo.ligue_4.board;
 
 import java.awt.Color;
-
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Random;
 
 import lpoo.ligue_4.entidades.Entity;
 import lpoo.ligue_4.entidades.Ficha;
+import lpoo.ligue_4.exceptions.UShouldNotBeHere;
 import lpoo.ligue_4.grafs.Spritesheet;
+import lpoo.ligue_4.main.Game;
 
+public class Tabuleiro_Turbo extends Tabuleiro {
 
+	private boolean trocar, trocar_left, trocar_right;
 
-public class Tabuleiro_Maluco extends Tabuleiro{
-	
-	private Random random;
-	private  boolean trocar; 
-	private int X_Maluco, Y_Maluco;
-	private boolean Crazyness;
-	//private int CrazynessLevel;
-
-	
-	public Tabuleiro_Maluco() {
-		
-		random = new Random();
+	public Tabuleiro_Turbo() {
 		
 		TABULEIRO = new int[Width][Height] ;
 		fichas = new ArrayList<Ficha>();
@@ -52,17 +43,15 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 		}
 		
 	}
-		
-	
 	
 	public void update() {
 		
-		
+
 		// AQ
 		if(!drop) {
 			
 			for(int i=0; i<fichas.size(); i++) {
-				Entity e = fichas.get(i);
+				Ficha e = fichas.get(i);
 				e.update();
 			}
 			
@@ -122,8 +111,7 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 			//Insere a coluna e a linha no tabuleiro
 			if(chosen && !drop && !buxinCheio[colunaChosen]) {
 				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();
-				fichas.get(Round-1).setID(colunaChosen, dropTo);//HERE
-				
+				fichas.get(Round-1).setID(colunaChosen, dropTo);
 				
 				if(dropTo == 0) {
 					buxinCheio[colunaChosen] = true;
@@ -132,70 +120,91 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 				fichas.get(Round-1).setX((colunaChosen*tileSize)+Game.WIDTH/offSet);
 				fichas.get(Round-1).setY((dropTo*tileSize)+Game.HEIGHT/offSet);
 				
-				//Round++;
-				//chosen = false;
-				
-				
-				CrazynessLevel();
-				
+
 				try {
+				    // Some code that may throw UShouldNotBeHere exception
+				    // ...
 					
-					if(Crazyness == true) {
-						Modo_Maluco(dropTo,colunaChosen);
+					if(ModoTurbo(colunaChosen, dropTo)) { // Aciona o Modo Turbo
 						
-						if(trocar == true) {
-							// BOTAR ALGO AQ
-							TABULEIRO[X_Maluco][Y_Maluco] = fichas.get(Round-1).getModelo();
-							
-							//HERE
+						if(trocar_left) { // Troca a ficha da esquerda
+							TABULEIRO[colunaChosen-1][dropTo] = fichas.get(Round-1).getModelo();
 							for(int i=0;  i<fichas.size(); i++) {
 								Ficha e = fichas.get(i);
 								int[] id = e.getID();
-								if( ((id[0] == X_Maluco) && (id[1] == dropTo))|| ((id[1] == colunaChosen) && (id[0] == Y_Maluco)) ) {
+								if((id[0] == colunaChosen-1) && (id[1] == dropTo)) {
 									e.setModelo(fichas.get(Round-1).getModelo());
 									e.setSprite(fichas.get(Round-1).getSprite());
 								}
 							}
 							
-							//ARTHUR BOTA ALGO AQUI PRA RENDEZIRAR A PEÇA EH ISSO
-							
-							
+							int vit1 = ChecarWin(dropTo, colunaChosen-1);	
+							if(vit1!=0) {
+								if(vit1==1) {
+									Game.vitP1 = true;
+								}
+								else {
+									Game.vitP2 = true;
+								}
+							}
 						}
+						
+						if(trocar_right) {// Troca a ficha da direita
+							TABULEIRO[colunaChosen+1][dropTo] = fichas.get(Round-1).getModelo();
+							for(int i=0;  i<fichas.size(); i++) {
+								Ficha e = fichas.get(i);
+								int[] id = e.getID();
+								if((id[0] == colunaChosen+1) && (id[1] == dropTo)) {
+									e.setModelo(fichas.get(Round-1).getModelo());
+									e.setSprite(fichas.get(Round-1).getSprite());
+								}
+							}
+							
+							int vit2 = ChecarWin(dropTo, colunaChosen+1);	
+							if(vit2!=0) {
+								if(vit2==1) {
+									Game.vitP1 = true;
+								}
+								else {
+									Game.vitP2 = true;
+								}
+							}
+						}
+						
 					}
-					
-				} catch (UShouldNotBeHere  e) {
-					System.out.println("YOU SHOULDN´T BE HERE!");
+				} catch (UShouldNotBeHere e) {
+				  System.out.println("YOU SHOULDN´T BE HERE!");						
 				}
-				//ATIVA MODO MALUCO!!
+			
 				
+				
+				
+				
+				//TO DO: Checar condicao de empate
 				
 				int vit = ChecarWin(dropTo, colunaChosen);
 				if(vit!=0) {
 					if(vit==1) {
 						Game.vitP1 = true;
 					}
-					
-					
 					else {
 						Game.vitP2 = true;
 					}
 				}
-				
-				Round++;//HERE
-				chosen = false;
+
+				Round++;
 				System.out.println(Round);
-				 
 				
-				
-			}
+				chosen = false;
+							
 			}
 		}
-		//}
 		// AQ
-	
+		
+	}
 	
 	public void render(Graphics g) {
-
+		
 		for(int x = 0; x < Width; x++) {
 			for(int y = 0; y < Height; y++) {
 				
@@ -206,8 +215,6 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 					Entity e = fichas.get(i);
 					e.render(g);
 				}
-				
-				
 				
 				cor = cores[Round- 1];
 				fichaAr = new Ficha(cor, 0, 0, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
@@ -242,85 +249,55 @@ public class Tabuleiro_Maluco extends Tabuleiro{
 					}
 				}
 			}
-		}
-	}
-
-	public void Modo_Maluco(int linha, int coluna) throws UShouldNotBeHere{
-		
-		int Slot_Central = TABULEIRO[coluna][linha];
-		
-		int Crazy_coluna = random.nextInt(3)- 1 + coluna;
-		int Crazy_linha = random.nextInt(3)- 1 + linha;
-		
-		int Slot_Maluco;
-		
-		trocar = false;
-														
-			if(Crazy_coluna >= Width ) {// fim do tabuleiro	
-				UShouldNotBeHere e = new UShouldNotBeHere();
-				throw e;
-			}
-			if(Crazy_coluna <= 0) {// fim do tabuleiro
-				UShouldNotBeHere e = new UShouldNotBeHere();
-				throw e;
-			}
-			if(Crazy_linha >= Height ) {// fim do tabuleiro
-				UShouldNotBeHere e = new UShouldNotBeHere();
-				throw e;
-			}
-			if(Crazy_linha <= 0) {// fim do tabuleiro
-				UShouldNotBeHere e = new UShouldNotBeHere();
-				throw e;
-			}
-			else {
-				 Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
-			}
-			
-			System.out.println("Crazy_coluna:" + Crazy_coluna + "Crazy_linha:" + Crazy_linha);	
-			if(Slot_Central == Slot_Maluco) {
-				
-				trocar = false;
-				
-			}else if(Slot_Maluco == 0) {
-				
-				trocar = false;
-			}
-			else {
-				
-				trocar = true;	
-			
-				X_Maluco =  Crazy_coluna;
-				Y_Maluco =  Crazy_linha;
-				
-				System.out.println("MALUCO ON:" + trocar);
-				
-			}
-			
-												
+		}	
 		
 	}
+			
+		
 	
-	//Nivel de loucura
-	public void CrazynessLevel() {
+	
+	public boolean ModoTurbo(int coluna, int linha) throws UShouldNotBeHere{
+			
+		int Slot_Centro = TABULEIRO[coluna][linha];
+		int Slot_Esquerda,Slot_Direita;	
 		
-		Crazyness = false;
-		int CrazynesLevel = random.nextInt(5);
-		
-		if(CrazynesLevel >= 2) {
-			Crazyness = true;
+		if (coluna == Width-1) {	// fim do tabuleiro		
+			 
+			  //Slot_Direita = Slot_Centro;
+			  //Slot_Esquerda = TABULEIRO[coluna-1][linha]; 
+			  UShouldNotBeHere e = new UShouldNotBeHere();
+			  throw e;
+			 
 		}
-		else {
-			Crazyness = false;
+		
+		else if(coluna == 0) {	 // fim do tabuleiro
+			 //Slot_Esquerda = Slot_Centro;
+			 //Slot_Direita = TABULEIRO[coluna+1][linha];	
+			 UShouldNotBeHere e = new UShouldNotBeHere();
+			 throw e;
 		}
 		
-		System.out.println("Crazynesse:" + Crazyness);
+		else {		
+			 Slot_Esquerda = TABULEIRO[coluna -1][linha];
+			 Slot_Direita = TABULEIRO[coluna +1][linha];
+			
+		}
+	 
+		trocar = false;
+		this.trocar_left = false;
+		this.trocar_right = false;
+			
+		if ((Slot_Centro != Slot_Esquerda) && (Slot_Esquerda!=0)) {				
+			this.trocar_left = true;
+			trocar = true;
+				
+		}
+		if ((Slot_Centro != Slot_Direita)&& Slot_Direita!=0) {
+			this.trocar_right = true;	
+			trocar = true;
+		}				
 		
+		return trocar;
+									
 	}
-
 }
-
-
-
-
-
-

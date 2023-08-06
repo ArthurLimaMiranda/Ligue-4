@@ -1,5 +1,6 @@
 package lpoo.ligue_4.main;
 
+
 import java.awt.Canvas;
 
 import java.awt.Color;
@@ -18,9 +19,11 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 
 import lpoo.ligue_4.board.Tabuleiro;
-import lpoo.ligue_4.board.Tabuleiro_Maluco;
+import lpoo.ligue_4.board.Tabuleiro_Turbo_Maluco;
 import lpoo.ligue_4.board.Tabuleiro_Turbo;
 import lpoo.ligue_4.exceptions.BusaoLotado;
+import lpoo.ligue_4.exceptions.LimiteNome;
+import lpoo.ligue_4.sound_track.SoundEffects;
 
 public  class Game extends Canvas implements Runnable, MouseMotionListener, MouseListener ,KeyListener {
 
@@ -32,13 +35,13 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	
 	public static boolean newGame = false;
 	public static boolean clicked = false;
-	public static boolean vitP1 = false, vitP2 = false;
+	public static boolean vitP1 = false, vitP2 = false, empate = false;
 
 	public static String gameState = "Menu", playerName="";
-	public static int modoJogo = 0, dificuldade = 0;
-	public static boolean p2 = false;
+	public static int modoJogo = 0;
+	public static boolean p2 = false, dificil = false;
 
-	public Tabuleiro_Maluco tabuleiro_maluco;
+	public Tabuleiro_Turbo_Maluco tabuleiro_maluco;
 	public Tabuleiro_Turbo tabuleiro_turbo;
 	public Tabuleiro tabuleiro;
 	public Menu menu;
@@ -48,9 +51,13 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	
 	private boolean press = false;
 	private int framesPress = 0;
+	SoundEffects sounds = new SoundEffects();
+	protected String Sound_Win = "res/bright-notifications-151766 (mp3cut.net).mp3";
+	
 	
 	
 	public Game() {
+		
 		
 		
 		this.setPreferredSize(new Dimension(WIDTH*SCALE,HEIGHT*SCALE)); // dimensiona tela
@@ -88,7 +95,9 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		
 		if(gameState.equals("Menu")) {
 			vitP1 = vitP2 = false;
-			menu.update();
+			try {
+				menu.update();
+			} catch (LimiteNome e) {e.printStackTrace();}
 			
 			if(newGame) {
 				if(modoJogo==0) { //Normal mode
@@ -99,7 +108,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 					this.tabuleiro_turbo = new Tabuleiro_Turbo();
 				}
 				else if(modoJogo == 2) {//Modo Turbo Maluco
-					this.tabuleiro_maluco = new Tabuleiro_Maluco();
+					this.tabuleiro_maluco = new Tabuleiro_Turbo_Maluco();
 				}
 
 				newGame = false;
@@ -109,11 +118,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		else if(gameState.equals("Normal")) {
 			
 			if(modoJogo==0) {
-				try {
-					this.tabuleiro.update();
-				} catch (BusaoLotado e) {
-					e.printStackTrace();
-				}
+				this.tabuleiro.update();
 			}
 			
 			else if(modoJogo==1) {
@@ -124,15 +129,18 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 			}
 			
 				
-			if(vitP1 || vitP2) {
+			if(vitP1 || vitP2 || empate) {
 				//GeraRanking(vitP1, vitP2);
 				gameState = "Game_Over";
+				sounds.playMP3WithTimeout(Sound_Win, 1000);
 				
 			}
 		}
 		
 		else if(gameState.equals("Game_Over")) {
+			
 			framesPress++;
+			//sounds.playMP3WithTimeout(Sound_Win, 1000);
 			if(framesPress>=35) {
 				framesPress=0;
 				press = !press;
@@ -182,15 +190,18 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 			g2.setFont(new Font("arial", Font.BOLD, 28));
 			g2.setColor(Color.white);
 			
-			String linha1 = "Fim de jogo, vitoria";
+			String linha1 = "Fim de jogo,";
 			if(vitP1) {
-				linha1+= " de: "+ player1.getNome();
+				linha1+= "vitoria de: "+ player1.getNome();
 			}
 			else if(player2.getTipo()==2) {
-				linha1+= " de: "+player2.getNome();
+				linha1+= "vitoria de: "+player2.getNome();
+			}
+			else if(player2.getTipo()==3) {
+				linha1+= "vitoria do computador";
 			}
 			else {
-				linha1+= " do computador";
+				linha1+= " empate";
 			}
 			
 			g2.drawString(linha1, (WIDTH*SCALE)/2-205-(linha1.length()/2), HEIGHT*SCALE/2-30);
@@ -335,7 +346,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 			if(menu.writeNameP1 || menu.writeNameP2) {
 				char c = e.getKeyChar();
 				if (Character.isAlphabetic(c) || Character.isDigit(c)) {
-					if(playerName.length()<=13) {
+					if(playerName.length()<=14) {
 						playerName += c;
 					}
                    

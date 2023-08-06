@@ -1,4 +1,5 @@
 package lpoo.ligue_4.board;
+import lpoo.ligue_4.sound_track.SoundEffects;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -34,9 +35,12 @@ public class Tabuleiro implements InterfaceTabuleiro{
 	
 	protected int Round = 1;	//Round inicial
 	
-
+	protected String Sound_Ficha = "res/cash-register-purchase-87313 (mp3cut.net).mp3";
+	protected String Sound_Win = "res/bright-notifications-151766 (mp3cut.net).mp3";
 	 
+	SoundEffects sounds = new SoundEffects();
 	public Tabuleiro() {
+		
 			
 		TABULEIRO = new int[Width][Height] ;
 		fichas = new ArrayList<Ficha>();
@@ -68,7 +72,7 @@ public class Tabuleiro implements InterfaceTabuleiro{
 
 	}
 	
-	public void update() throws BusaoLotado {
+	public void update() {
 		
 		
 		// AQ
@@ -133,61 +137,67 @@ public class Tabuleiro implements InterfaceTabuleiro{
 				}
 			}
 			
-			else {
-				if(Game.dificuldade == 0 && !chosen) {
-					colunaChosen = ia.EasyPeasy(this.buxinCheio);
-					colunaSelected = -1;
-					chosen = true;
-					selected = false;
-					//Checa se há alguma linha vazia na coluna desejada
-					for(int lines=Height-1; lines>=0; lines--) {
-						if(TABULEIRO[colunaChosen][lines] == 0) {
-							dropTo = lines;
-							break;
-						}
-						
-					}
-					
-					drop = true;
-					dropping = 0;
-					System.out.println("Coluna: "+colunaChosen);
-
-				}
-				
-				else if(Game.dificuldade == 1) {
-									
+			else if(!chosen){
+				if(!Game.dificil) {
+					colunaChosen = ia.EasyPeasy(this.buxinCheio, this.colunaChosen);
 				}
 				
 				else {
-					
+												
+					if(Round == 2) {
+						colunaChosen = ia.BLOCKYOU(this.colunaChosen);
+						System.out.println("BLOCK");
+					}else {
+						colunaChosen = ia.INEVERGonnaLetUWin(TABULEIRO, Height, Width, this.buxinCheio);
+					}
 				}
+
+				colunaSelected = -1;
+				chosen = true;
+				selected = false;
+				//Checa se há alguma linha vazia na coluna desejada
+				for(int lines=Height-1; lines>=0; lines--) {
+					if(TABULEIRO[colunaChosen][lines] == 0) {
+						dropTo = lines;
+						break;
+					}					
+				}	
+				drop = true;
+				dropping = 0;
+				System.out.println("Coluna: "+colunaChosen);
+				
 			}
 			
 			//Insere a coluna e a linha no tabuleiro
 			if(chosen && !drop && !buxinCheio[colunaChosen]) {
-				System.out.println("OI");
-				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();
 				
+				sounds.playMP3WithTimeout(Sound_Ficha, 300);
+				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();				
 				if(dropTo == 0) {
 					buxinCheio[colunaChosen] = true;
 				}
-				
 				fichas.get(Round-1).setX((colunaChosen*tileSize)+Game.WIDTH/offSet);
 				fichas.get(Round-1).setY((dropTo*tileSize)+Game.HEIGHT/offSet);
-				
-				Round++;
-				chosen = false;
-				
+
 				int vit = ChecarWin(dropTo, colunaChosen);
 				if(vit!=0) {
 					if(vit==1) {
 						Game.vitP1 = true;
+						//sounds.playMP3WithTimeout(Sound_Win, 1000);
 					}
 					else {
 						Game.vitP2 = true;
+						//sounds.playMP3WithTimeout(Sound_Win, 1000);
 					}
 				}
+				if(Round == nRounds-1) {
+					Game.empate = true;
+				}
 				
+				
+				
+				Round++;		
+				chosen = false;
 				System.out.println(Round);
 				
 			}

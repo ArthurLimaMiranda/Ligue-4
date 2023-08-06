@@ -10,49 +10,149 @@ import lpoo.ligue_4.exceptions.UShouldNotBeHere;
 public class MyRivalPC {
 	
 	private Random random = new Random();
-	private int ColunaRival;
+	private int colunaRival, colunaTemp;
 	
-	
-	public int EasyPeasy(boolean[] colunasStatus) throws BusaoLotado{
-			
-		ColunaRival = random.nextInt(7);
-		if(colunasStatus[ColunaRival]== true) {			
-			while(colunasStatus[ColunaRival]== true) {			
-				ColunaRival = random.nextInt(7);
-				BusaoLotado e = new BusaoLotado();
-				throw e;
-			}			
-		}
-											
-		return ColunaRival;
-		
+	public MyRivalPC() {
+		colunaTemp = random.nextInt(7);
 	}
 	
-	public int INEVERGonnaLetUWin(int coluna, boolean[] colunasStatus) throws BusaoLotado,UShouldNotBeHere{
-		
-		ColunaRival = coluna + random.nextInt(3) - 1;		
-		
-		if(ColunaRival <= 0) {	
-			 UShouldNotBeHere e = new UShouldNotBeHere();
-			 throw e;
+	public void ChecaCanto(int coluna) throws UShouldNotBeHere {
+		if((coluna == 7 -1) || (coluna == 0)) {
+			UShouldNotBeHere e = new UShouldNotBeHere();
+			throw e;
 		}
-		else if(ColunaRival >= 7) {
-			 UShouldNotBeHere e = new UShouldNotBeHere();
-			 throw e;
-		}
-		else {
-			if(colunasStatus[ColunaRival]== true) {
-				
-				while(colunasStatus[ColunaRival]== true) {			
-					ColunaRival =  coluna + random.nextInt(3) - 1;
-					BusaoLotado e = new BusaoLotado();
-					throw e;
-				}
-		}
+	}
+	
+	public int BLOCKYOU(int coluna) {
 			
+		try {
+			ChecaCanto(coluna);
+			colunaRival = random.nextInt(3) - 1 + coluna ;
+			while(colunaRival == 0) {
+				
+				colunaRival = random.nextInt(3) -1 + coluna;
+			}
+		} catch (UShouldNotBeHere e) {
+			e.printStackTrace();
+			colunaRival = random.nextInt(3) - 1 + coluna ;
 		}
-											
-		return ColunaRival;
 		
+		
+		
+		return colunaRival;
+	}
+
+	public void TaCheio (boolean status) throws BusaoLotado {
+		if(status) {
+			BusaoLotado e = new BusaoLotado();
+			throw e;
+		}
+	}
+	
+	public int EasyPeasy(boolean[] colunasStatus, int coluna){
+			
+		try {
+			ChecaCanto(coluna);
+			colunaRival = random.nextInt(3)- 1  + coluna;
+			while (true){
+				try {
+					TaCheio(colunasStatus[colunaRival]);
+					break;
+				} 
+				catch (BusaoLotado e) {
+					e.printStackTrace();
+					colunaRival = random.nextInt(3)-1  + coluna;
+				}
+			}
+		} catch (UShouldNotBeHere e) {
+			e.printStackTrace();
+			colunaRival = random.nextInt(3)-1  + coluna;
+		}
+		
+		
+										
+		return colunaRival;	
+	}
+	
+	public int INEVERGonnaLetUWin(int[][] tabuleiro, int Height, int Width, boolean[] colunasStatus){
+		
+		int slot01, slot02, slot03, slot04;	
+		
+		
+		
+		for (int y = 0 ; y < Height -3 ; y++) {						
+			for(int x = 0; x < Width ; x++ ) {
+				slot01 = tabuleiro[x][y];
+				slot02 = tabuleiro[x][y+1];
+				slot03 = tabuleiro[x][y+2];
+				slot04 = tabuleiro[x][y+3];
+				
+				if((x==colunaTemp) && (slot01==0) && (slot02==slot03) && (slot03==slot04) && (slot04==3)) {
+					colunaRival = colunaTemp;
+					return colunaRival;
+				}
+
+				if ((slot01==0) && (slot02==slot03) && (slot03==slot04) && (slot04==1)) {
+					colunaRival = x;
+					return colunaRival;					
+				}
+			}
+		}		
+		for(int y=0; y<Height; y++) {
+			for (int x = 0 ; x < Width-3 ; x ++) {						
+				slot01 = tabuleiro[x][y];
+				slot02 = tabuleiro[x+1][y];
+				slot03 = tabuleiro[x+2][y];
+				slot04 = tabuleiro[x+3][y];
+
+				if((y==Height-1) || (tabuleiro[x][y+1]!=0)) {
+					if ((slot04==0) && (slot01!=0) && (slot01==slot02) && (slot02==slot03)) {
+						colunaRival = x+3;
+						return colunaRival;
+					}
+					
+					else if ((slot01==0) && (slot02!=0) && (slot02==slot03) && (slot02==slot04)) {
+						colunaRival = x;
+						return colunaRival;
+					}
+					
+					else if ((slot02==0) && (slot01!=0) && (slot01==slot03) && (slot03==slot04)) {
+						colunaRival = x+1;
+						return colunaRival;
+					}
+					
+					else if ((slot03==0) && (slot01!=0) && (slot01==slot02) && (slot02==slot04)) {
+						colunaRival = x+2;
+						return colunaRival;
+					}
+				}
+			}
+		}
+		
+		for(int yTemp = 0; yTemp < Height-3 ; yTemp++ ) {
+			slot01 = tabuleiro[colunaTemp][yTemp];
+			slot02 = tabuleiro[colunaTemp][yTemp+1];
+			slot03 = tabuleiro[colunaTemp][yTemp+2];
+			slot04 = tabuleiro[colunaTemp][yTemp+3];
+			
+			if ((slot03==0) && (slot04==3)) {
+				colunaRival = colunaTemp;
+				return colunaRival;
+			}
+		}
+		colunaTemp = random.nextInt(7);
+		while (true){
+			try {
+				TaCheio(colunasStatus[colunaTemp]);
+				break;
+			} 
+			catch (BusaoLotado e) {
+				e.printStackTrace();
+				colunaTemp = random.nextInt(7);
+			}
+		}
+		colunaRival = colunaTemp;
+			
+		return colunaRival;	
 	}	
 }

@@ -1,5 +1,5 @@
 package lpoo.ligue_4.main;
-
+import lpoo.ligue_4.sound_track.SoundEffects;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -9,6 +9,10 @@ import lpoo.ligue_4.exceptions.LimiteNome;
 
 public class Menu {
 
+	SoundEffects sounds = new SoundEffects();
+	private String Sound_Menu = "res/light-pull-string-32448 (mp3cut.net).mp3";
+	
+	
 	private int choice=0, coluna=0, tela=0, options=4, linhaMax=4, maxColuna=2, modosDeJogo=3;
 	private int[] maxChoice = {options-1, linhaMax};
 	private String modoJogo="Modo Normal";
@@ -19,11 +23,7 @@ public class Menu {
 	}
 	
 	
-	public void update() {
-		
-		if(tela==1 && !Game.p2) {
-			coluna=0;
-		}
+	public void update() throws LimiteNome {
 		
 		if(!writeNameP1 && !writeNameP2) {
 			if(down) {
@@ -42,12 +42,11 @@ public class Menu {
 			}
 			
 			else if(left) {
-				left = false;
+				left = false;	
 				
-				if(tela==1) {
-					if(Game.p2) {
-						coluna--;
-					}
+				if(tela==1) {				
+					coluna--;
+					
 					if(coluna<0) {
 						coluna = maxColuna-1;
 					}
@@ -56,7 +55,7 @@ public class Menu {
 						Game.p2 = !Game.p2;
 					}
 					
-					else if(choice==3) {
+					else if(choice==2) {
 						Game.modoJogo--;
 						if(Game.modoJogo<0) {
 							Game.modoJogo=modosDeJogo-1;
@@ -69,10 +68,7 @@ public class Menu {
 				right = false;
 				
 				if(tela==1) {
-					if(Game.p2) {
-						coluna++;
-					}
-					
+					coluna++;
 					if(coluna>maxColuna-1) {
 						coluna = 0;
 					}
@@ -91,15 +87,21 @@ public class Menu {
 			}
 		}
 		
-		try {
 			if(enter) {
+				
+				
+				sounds.playMP3WithTimeout(Sound_Menu, 1000);
 				enter=false;
 				if(tela==0) {
 					if(choice==0) {
 						tela=1;
 						coluna=0;
-						Game.player1.setNome("");
-						Game.player2.setNome("");
+						try {
+							Game.player1.setNome("");
+							Game.player2.setNome("");
+							Game.dificil = false;
+						} catch (LimiteNome e) {e.printStackTrace();}
+						
 					}
 		
 					else if(choice==3) {
@@ -113,21 +115,37 @@ public class Menu {
 							Game.playerName = "";
 							writeNameP1=true;
 						}
-						else if(coluna== 1 && !writeNameP2) {
+						else if(Game.p2 && coluna== 1 && !writeNameP2) {
 							Game.playerName = "";
 							writeNameP2=true;
+						}
+						
+						else if(!Game.p2 && coluna== 1) {
+							Game.dificil = !Game.dificil;
 						}
 
 
 						if(writeNameP1 && coluna==0 && Game.playerName.length()>=1) {
 							writeNameP1 = false;
-							Game.player1.setNome(Game.playerName);
+							try {
+								Game.player1.setNome(Game.playerName);
+							} 
+							catch (LimiteNome e) {
+								e.printStackTrace();
+								Game.player1.setNome("");
+							}
 							Game.playerName = "";
 						}
 						
-						else if(writeNameP2 && coluna==1 && Game.playerName.length()>=1) {
+						if(Game.p2 && writeNameP2 && coluna==1 && Game.playerName.length()>=1) {
 							writeNameP2 = false;
-							Game.player2.setNome(Game.playerName);
+							try {
+								Game.player2.setNome(Game.playerName);
+							} 
+							catch (LimiteNome e) {
+								e.printStackTrace();
+								Game.player2.setNome("");
+							}
 							Game.playerName = "";
 						}
 					}
@@ -150,9 +168,7 @@ public class Menu {
 					}
 				}
 			}
-		} catch (LimiteNome e) {
-			System.out.println("Nome Inválido");
-		}
+		
 		
 		// AQ
 		
@@ -198,42 +214,54 @@ public class Menu {
 			
 			
 			g.drawRect((Game.WIDTH*Game.SCALE)/2-40+155, (Game.HEIGHT*Game.SCALE)/2-130, 180, 30);
-			
-			
-			try {
-				if(Game.p2) {
-					if(!writeNameP2) {
-						if(choice==0 && coluna==1) {
-							g.fillRect((Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-124, 171, 19);
-						}
-						else {
-							g.drawString(Game.player2.getNome(), (Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-108);
-						}
+
+			if(Game.p2) {
+				if(!writeNameP2) {
+					if(choice==0 && coluna==1) {
+						g.fillRect((Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-124, 171, 19);
 					}
-					
-					else if(choice==0 && coluna==1 && writeNameP2) {
-						g.drawString(Game.playerName, (Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-108);
+					else {
+						g.drawString(Game.player2.getNome(), (Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-108);
 					}
-					g.drawString("Nome p2", (Game.WIDTH*Game.SCALE)/2-40+200, (Game.HEIGHT*Game.SCALE)/2-75);
 				}
-										
 				
-				else {
-					Game.player2.setNome("");
-					g.setColor(Color.gray);
-					g.fillRect((Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-124, 171, 19);
-					g.drawString("Nome p2", (Game.WIDTH*Game.SCALE)/2-40+200, (Game.HEIGHT*Game.SCALE)/2-75);
+				else if(choice==0 && coluna==1 && writeNameP2) {
 					
-					g.setColor(Color.white);
 				}
-			} catch (LimiteNome e) {
-				System.out.println("Nome Inválido");
+				g.drawString("Nome p2", (Game.WIDTH*Game.SCALE)/2-40+200, (Game.HEIGHT*Game.SCALE)/2-75);
 			}
+									
 			
-			//AQ
-			
-			
-			//AQ
+			else {
+				try {
+					Game.player2.setNome("");
+				}catch (LimiteNome e) {e.printStackTrace();}
+				
+				g.setColor(Color.gray);
+				g.setFont(new Font("arial", Font.BOLD, 12));
+				g.drawString("(Aperte enter para mudar)", (Game.WIDTH*Game.SCALE)/2-95+225, (Game.HEIGHT*Game.SCALE)/2-140);
+				g.setFont(new Font("arial", Font.BOLD, 20));
+				g.setColor(Color.white);
+				if(!Game.dificil) {
+					g.drawString("Facil", (Game.WIDTH*Game.SCALE)/2-40+225, (Game.HEIGHT*Game.SCALE)/2-108);
+				}
+				else {
+					g.drawString("Dificil", (Game.WIDTH*Game.SCALE)/2-45+225, (Game.HEIGHT*Game.SCALE)/2-108);
+				}
+				
+				
+				if(choice==0 && coluna==1) {
+					g.drawString("> Dificuldade <", (Game.WIDTH*Game.SCALE)/2-60+200, (Game.HEIGHT*Game.SCALE)/2-75);
+				}
+				else {
+					g.drawString("< Dificuldade >", (Game.WIDTH*Game.SCALE)/2-60+200, (Game.HEIGHT*Game.SCALE)/2-75);
+				}
+				
+				
+				
+				g.setColor(Color.white);
+			}
+
 			if(choice==1) {
 				if(Game.p2) {
 					g.drawString("<  P v P  >", (Game.WIDTH*Game.SCALE)/2-50, (Game.HEIGHT*Game.SCALE)/2+55);
@@ -262,11 +290,11 @@ public class Menu {
 				}
 				else if(Game.modoJogo==1) {
 					modoJogo = "Modo Turbo";
-					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-75, (Game.HEIGHT*Game.SCALE)/2+110);
+					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-68, (Game.HEIGHT*Game.SCALE)/2+110);
 				}
 				else if(Game.modoJogo == 2) {
 					modoJogo = "Modo Turbo Maluco";
-					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-75, (Game.HEIGHT*Game.SCALE)/2+110);
+					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-100, (Game.HEIGHT*Game.SCALE)/2+110);
 				}
 			}
 			
@@ -281,7 +309,7 @@ public class Menu {
 				}
 				else if(Game.modoJogo == 2) {
 					modoJogo = "Modo Turbo Maluco";
-					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-75, (Game.HEIGHT*Game.SCALE)/2+110);
+					g.drawString("> "+modoJogo+" <", (Game.WIDTH*Game.SCALE)/2-100, (Game.HEIGHT*Game.SCALE)/2+110);
 				}
 			}
 			

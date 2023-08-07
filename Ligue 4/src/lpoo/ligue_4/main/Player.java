@@ -24,7 +24,7 @@ public class Player{
 	
 	public void setNome(String nome) throws LimiteNome{
 		
-		if(nome.length() > 10) {
+		if(nome.length() > 12) {
 			LimiteNome e = new LimiteNome();
 			throw e;
 		}

@@ -16,6 +16,8 @@ public class Menu {
 	private int choice=0, coluna=0, tela=0, options=4, linhaMax=4, maxColuna=2, modosDeJogo=3;
 	private int[] maxChoice = {options-1, linhaMax};
 	private String modoJogo="Modo Normal";
+	private String[] top10Names = new String[10];
+	private int[] top10Points = new int[10];
 	public boolean up, down, left, right, enter, writeNameP1=false, writeNameP2=false;
 	
 	public void setTela(int tela) {
@@ -53,6 +55,9 @@ public class Menu {
 		
 					if(choice==1) {
 						Game.p2 = !Game.p2;
+						try {
+							Game.player2.setNome("");
+						} catch (LimiteNome e) {e.printStackTrace();}
 					}
 					
 					else if(choice==2) {
@@ -75,6 +80,9 @@ public class Menu {
 					
 					if(choice==1) {
 						Game.p2 = !Game.p2;
+						try {
+							Game.player2.setNome("");
+						} catch (LimiteNome e) {e.printStackTrace();}
 					}
 					
 					else if(choice==2) {
@@ -88,8 +96,7 @@ public class Menu {
 		}
 		
 			if(enter) {
-				
-				
+
 				sounds.playMP3WithTimeout(Sound_Menu, 1000);
 				enter=false;
 				if(tela==0) {
@@ -100,10 +107,16 @@ public class Menu {
 							Game.player1.setNome("");
 							Game.player2.setNome("");
 							Game.dificil = false;
+							Game.modoJogo=0;
+							Game.p2=false;
 						} catch (LimiteNome e) {e.printStackTrace();}
 						
 					}
-		
+					
+					else if(choice==1) {
+						tela=2;
+					}
+					
 					else if(choice==3) {
 						System.exit(1);
 					}
@@ -226,7 +239,7 @@ public class Menu {
 				}
 				
 				else if(choice==0 && coluna==1 && writeNameP2) {
-					
+					g.drawString(Game.playerName, (Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-108);
 				}
 				g.drawString("Nome p2", (Game.WIDTH*Game.SCALE)/2-40+200, (Game.HEIGHT*Game.SCALE)/2-75);
 			}
@@ -234,7 +247,7 @@ public class Menu {
 			
 			else {
 				try {
-					Game.player2.setNome("");
+					Game.player2.setNome("Computador");
 				}catch (LimiteNome e) {e.printStackTrace();}
 				
 				g.setColor(Color.gray);
@@ -316,6 +329,24 @@ public class Menu {
 			g.drawString((choice==3? "< Iniciar >" : ">Iniciar<"), (choice==3? (Game.WIDTH*Game.SCALE)/2-48:  (Game.WIDTH*Game.SCALE)/2-40), (Game.HEIGHT*Game.SCALE)/2+165);
 			g.drawString((choice==4? "< Retornar >" : ">Retornar<"), (choice==4? (Game.WIDTH*Game.SCALE)/2-60:(Game.WIDTH*Game.SCALE)/2-53), (Game.HEIGHT*Game.SCALE)/2+220);
 
+		}
+		
+		else if(tela==2) {
+			g.setColor(Color.black);
+			g.fillRect(0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE);
+			g.setColor(Color.white);
+			g.setFont(new Font("arial", Font.BOLD, 30));
+			g.drawString(">Ranking<", (Game.WIDTH*Game.SCALE)/2-75, (Game.HEIGHT*Game.SCALE)/2-150);
+			g.setFont(new Font("arial", Font.BOLD, 20));
+			
+			g.drawRect((Game.WIDTH*Game.SCALE)/2-200, (Game.HEIGHT*Game.SCALE)/2-120, 400, 300);	
+			
+			for(int i=0; i<Game.ranking.partidas.size(); i++) {
+				g.drawString(Game.ranking.partidas.get(i)[2], (Game.WIDTH*Game.SCALE)/2-90, (Game.HEIGHT*Game.SCALE)/2-80+(i*30));
+			}
+			
+			g.drawString("<Melhores Jogadores>", (Game.WIDTH*Game.SCALE)/2-90, (Game.HEIGHT*Game.SCALE)/2+220);
+			g.drawString("<Voltar>", (Game.WIDTH*Game.SCALE)/2-90, (Game.HEIGHT*Game.SCALE)/2+250);
 		}
 	}
 

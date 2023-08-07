@@ -6,7 +6,8 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 import lpoo.ligue_4.entidades.Entity;
-import lpoo.ligue_4.entidades.Ficha;
+import lpoo.ligue_4.entidades.FichaE;
+import lpoo.ligue_4.entidades.TabuleiroE;
 import lpoo.ligue_4.exceptions.BusaoLotado;
 import lpoo.ligue_4.grafs.Spritesheet;
 import lpoo.ligue_4.main.Game;
@@ -23,8 +24,9 @@ public class Tabuleiro implements InterfaceTabuleiro{
 	protected boolean dentro = false, selected = false, chosen = false, drop = false;
 	protected boolean[] buxinCheio = new boolean[7];
 	
-	protected Ficha fichaAr;
-	protected ArrayList<Ficha> fichas;
+	protected FichaE fichaAr;
+	protected ArrayList<FichaE> fichas;
+	protected TabuleiroE[][] tabuleiroGraf;
 	protected Spritesheet spritesheet;
 	protected MyRivalPC ia;
 	
@@ -40,23 +42,23 @@ public class Tabuleiro implements InterfaceTabuleiro{
 	 
 	SoundEffects sounds = new SoundEffects();
 	public Tabuleiro() {
-		
-			
-		TABULEIRO = new int[Width][Height] ;
-		fichas = new ArrayList<Ficha>();
+				
+		TABULEIRO = new int[Width][Height];
+		tabuleiroGraf = new TabuleiroE[Width][Height];
+		fichas = new ArrayList<FichaE>();
 		spritesheet = new Spritesheet("res/spritesheet.png");
 		ia = new MyRivalPC();
 		
 		for (int a = 0; a < nRounds; a++) {
 			
 			if (a % 2 != 0 && Game.player2.getTipo() == 2) {			
-				fichas.add(new Ficha(2, 0, 0, 32, 32, spritesheet.getSprite(32*2, 0, 32, 32)));	
+				fichas.add(new FichaE(2, 0, 0, 32, 32, spritesheet.getSprite(32*2, 0, 32, 32)));	
 			}
 			else if (a % 2 != 0 && Game.player2.getTipo() == 3) {		
-				fichas.add(new Ficha(3, 0, 0, 32, 32, spritesheet.getSprite(32*3, 0, 32, 32)));
+				fichas.add(new FichaE(3, 0, 0, 32, 32, spritesheet.getSprite(32*3, 0, 32, 32)));
 			}
 			else {		
-				fichas.add(new Ficha(1, 0, 0, 32, 32, spritesheet.getSprite(32*1, 0, 32, 32)));
+				fichas.add(new FichaE(1, 0, 0, 32, 32, spritesheet.getSprite(32*1, 0, 32, 32)));
 			}		
 		}
 		
@@ -67,6 +69,27 @@ public class Tabuleiro implements InterfaceTabuleiro{
 		for (int a = 0; a < buxinCheio.length; a++) {
 			buxinCheio[a] = false;
 		}
+		
+		for(int w=0; w<Width; w++) {
+			for(int h=0; h<Height; h++) {
+				if(w==0 && h==0) {
+					tabuleiroGraf[w][h] = new TabuleiroE(0, 0, 32, 32, spritesheet.getSprite(32*5, 0, 32, 32));
+				}
+				else if(w==0 && h==Height-1) {
+					tabuleiroGraf[w][h] = new TabuleiroE(0, 0, 32, 32, spritesheet.getSprite(32*6, 0, 32, 32));					
+				}
+				else if(w==Width-1 && h==0) {
+					tabuleiroGraf[w][h] = new TabuleiroE(0, 0, 32, 32, spritesheet.getSprite(32*7, 0, 32, 32));
+				}
+				else if(w==Width-1 && h==Height-1) {
+					tabuleiroGraf[w][h] = new TabuleiroE(0, 0, 32, 32, spritesheet.getSprite(32*8, 0, 32, 32));
+				}
+				else {
+					tabuleiroGraf[w][h] = new TabuleiroE(0, 0, 32, 32, spritesheet.getSprite(32*4, 0, 32, 32));
+				}
+				
+			}
+		}
  	
 		//Adiciona as fichas a cada Round com as cores certas					
 
@@ -74,15 +97,13 @@ public class Tabuleiro implements InterfaceTabuleiro{
 	
 	public void update() {
 		
-		
-		// AQ
 		if(!drop) {
 			for(int i=0; i<fichas.size(); i++) {
 				Entity e = fichas.get(i);
 				e.update();
 			}
 			
-			if(Round%2!=0) {
+			if(Round%2!=0||Game.p2) {
 				//Checa se o mouse se encontra dentro do tabuleiro e em qual coluna esta em cima
 				if((Game.xPos>Game.WIDTH/offSet) && (Game.xPos<((Width*tileSize)-3+Game.WIDTH/offSet)) &&
 				   (Game.yPos>=Game.HEIGHT/offSet) && (Game.yPos<=((Height*tileSize)+Game.HEIGHT/offSet))) {
@@ -137,17 +158,17 @@ public class Tabuleiro implements InterfaceTabuleiro{
 				}
 			}
 			
-			else if(!chosen){
+			else if(!chosen && !Game.p2){
 				if(!Game.dificil) {
 					colunaChosen = ia.EasyPeasy(this.buxinCheio, this.colunaChosen);
 				}
 				
-				else {
-												
+				else {							
 					if(Round == 2) {
 						colunaChosen = ia.BLOCKYOU(this.colunaChosen);
 						System.out.println("BLOCK");
-					}else {
+					}
+					else {
 						colunaChosen = ia.INEVERGonnaLetUWin(TABULEIRO, Height, Width, this.buxinCheio);
 					}
 				}
@@ -170,9 +191,8 @@ public class Tabuleiro implements InterfaceTabuleiro{
 			
 			//Insere a coluna e a linha no tabuleiro
 			if(chosen && !drop && !buxinCheio[colunaChosen]) {
-				
-				sounds.playMP3WithTimeout(Sound_Ficha, 300);
-				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();				
+				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();	
+				fichas.get(Round-1).setID(colunaChosen, dropTo);
 				if(dropTo == 0) {
 					buxinCheio[colunaChosen] = true;
 				}
@@ -183,18 +203,14 @@ public class Tabuleiro implements InterfaceTabuleiro{
 				if(vit!=0) {
 					if(vit==1) {
 						Game.vitP1 = true;
-						//sounds.playMP3WithTimeout(Sound_Win, 1000);
 					}
 					else {
 						Game.vitP2 = true;
-						//sounds.playMP3WithTimeout(Sound_Win, 1000);
 					}
 				}
 				if(Round == nRounds-1) {
 					Game.empate = true;
 				}
-				
-				
 				
 				Round++;		
 				chosen = false;
@@ -211,45 +227,65 @@ public class Tabuleiro implements InterfaceTabuleiro{
 			for(int y = 0; y < Height; y++) {
 				
 				g.setColor(Color.white); //slots das fichas
-				g.drawRect((x*tileSize)+Game.WIDTH/offSet, (y*tileSize)+Game.HEIGHT/offSet, tileSize, tileSize);
+
+				if(Game.gameState.equals("Game_Over")) {
+					tabuleiroGraf[x][y].setX((x*tileSize+110)+Game.WIDTH*Game.SCALE/offSet);
+					tabuleiroGraf[x][y].setY((y*tileSize+250)+Game.HEIGHT*Game.SCALE/offSet);						
+				}
 				
-				for(int i=0; i<Round; i++) {
-					Entity e = fichas.get(i);
-					e.render(g);
+				else {
+					tabuleiroGraf[x][y].setX((x*tileSize)+Game.WIDTH/offSet);
+					tabuleiroGraf[x][y].setY((y*tileSize)+Game.HEIGHT/offSet);
+					tabuleiroGraf[x][y].render(g);
+				}
+				tabuleiroGraf[x][y].render(g);
+				
+				for(int i=0; i<Round-1; i++) {
+					FichaE e = fichas.get(i);		
+					if(Game.gameState.equals("Game_Over") && i<Round-1) {
+						e.setX((e.getID()[0]*tileSize+110)+Game.WIDTH*Game.SCALE/offSet);
+						e.setY((e.getID()[1]*tileSize+250)+Game.HEIGHT*Game.SCALE/offSet);
+						e.render(g);							
+					}
+					else {
+						e.render(g);
+					}
 				}
 				
 				
 				
 				cor = cores[Round- 1];
-				fichaAr = new Ficha(cor, 0, 0, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
+				fichaAr = new FichaE(cor, 0, 0, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
 				
-				//Destaca a coluna que o mouse esta em cima
-				if(dentro && !selected && !drop) {
-					fichaAr.setX((coluna*tileSize)+Game.WIDTH/offSet);
-					fichaAr.setY(Game.HEIGHT/offSet-dropSet);
-					fichaAr.render(g);
-					g.setColor(Color.black);
-					g.drawRect((coluna*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);	
-				}
-					
-				//Destaca a coluna selecionada
-				if(selected) {	
-					fichaAr.setX((colunaSelected*tileSize)+Game.WIDTH/offSet);
-					fichaAr.setY(Game.HEIGHT/offSet-dropSet);
-					fichaAr.render(g);
-					g.setColor(Color.red);
-					g.drawRect((colunaSelected*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);
-				}
-				
-				//Animação de queda				
-				if(drop) {
-					fichaAr.setX((colunaChosen*tileSize)+Game.WIDTH/offSet);
-					fichaAr.setY((Game.HEIGHT/offSet)-dropSet+(int)dropping);
-					fichaAr.render(g);
-					dropping+=0.1;
-					if((int)dropping-dropSet>=(dropTo*tileSize)-offSet+dropSet-tileSize) {
-						drop=false;
+				if(!Game.gameState.equals("Game_Over")) {
+					//Destaca a coluna que o mouse esta em cima
+					if(dentro && !selected && !drop) {
+						fichaAr.setX((coluna*tileSize)+Game.WIDTH/offSet);
+						fichaAr.setY(Game.HEIGHT/offSet-dropSet);
+						fichaAr.render(g);
+						g.setColor(Color.black);
+						g.drawRect((coluna*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);	
+					}
 						
+					//Destaca a coluna selecionada
+					if(selected) {	
+						fichaAr.setX((colunaSelected*tileSize)+Game.WIDTH/offSet);
+						fichaAr.setY(Game.HEIGHT/offSet-dropSet);
+						fichaAr.render(g);
+						g.setColor(Color.red);
+						g.drawRect((colunaSelected*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);
+					}
+					
+					//Animação de queda				
+					if(drop) {
+						fichaAr.setX((colunaChosen*tileSize)+Game.WIDTH/offSet);
+						fichaAr.setY((Game.HEIGHT/offSet)-dropSet+(int)dropping);
+						fichaAr.render(g);
+						dropping+=0.1;
+						if((int)dropping-dropSet>=(dropTo*tileSize)-offSet+dropSet-tileSize) {
+							sounds.playMP3WithTimeout(Sound_Ficha, 300);
+							drop=false;
+						}
 					}
 				}
 			}

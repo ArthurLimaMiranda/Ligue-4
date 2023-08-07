@@ -4,6 +4,7 @@ package lpoo.ligue_4.main;
 import java.util.Random;
 
 import lpoo.ligue_4.board.Tabuleiro;
+import lpoo.ligue_4.board.Tabuleiro_Turbo;
 import lpoo.ligue_4.exceptions.BusaoLotado;
 import lpoo.ligue_4.exceptions.UShouldNotBeHere;
 
@@ -14,19 +15,18 @@ public class MyRivalPC {
 	
 	public MyRivalPC() {
 		colunaTemp = random.nextInt(7);
-	}
-	
-	public void ChecaCanto(int coluna) throws UShouldNotBeHere {
-		if((coluna == 7 -1) || (coluna == 0)) {
-			UShouldNotBeHere e = new UShouldNotBeHere();
+	}	
+	public void TaCheio (boolean status) throws BusaoLotado {
+		if(status) {
+			BusaoLotado e = new BusaoLotado();
 			throw e;
 		}
 	}
 	
 	public int BLOCKYOU(int coluna) {
-			
+		
 		try {
-			ChecaCanto(coluna);
+			Tabuleiro_Turbo.ChecaCanto(coluna);
 			colunaRival = random.nextInt(3) - 1 + coluna ;
 			while(colunaRival == 0) {
 				
@@ -41,18 +41,11 @@ public class MyRivalPC {
 		
 		return colunaRival;
 	}
-
-	public void TaCheio (boolean status) throws BusaoLotado {
-		if(status) {
-			BusaoLotado e = new BusaoLotado();
-			throw e;
-		}
-	}
 	
 	public int EasyPeasy(boolean[] colunasStatus, int coluna){
 			
 		try {
-			ChecaCanto(coluna);
+			Tabuleiro_Turbo.ChecaCanto(coluna);
 			colunaRival = random.nextInt(3)- 1  + coluna;
 			while (true){
 				try {

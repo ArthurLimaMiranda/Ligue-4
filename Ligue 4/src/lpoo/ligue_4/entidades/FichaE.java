@@ -2,13 +2,13 @@ package lpoo.ligue_4.entidades;
 
 import java.awt.image.BufferedImage;
 
-public class Ficha extends Entity{
+public class FichaE extends Entity{
 	
 	private int modelo;
 	private int[] id = new int[2];
 	
 	
-	public Ficha(int modelo, int x, int y, int width, int height, BufferedImage sprite) {
+	public FichaE(int modelo, int x, int y, int width, int height, BufferedImage sprite) {
 		super(x, y, width, height, sprite);
 		this.modelo = modelo;
 	}

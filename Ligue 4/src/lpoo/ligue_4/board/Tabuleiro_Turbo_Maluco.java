@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import lpoo.ligue_4.entidades.Entity;
-import lpoo.ligue_4.entidades.Ficha;
+import lpoo.ligue_4.entidades.FichaE;
 import lpoo.ligue_4.exceptions.UShouldNotBeHere;
 import lpoo.ligue_4.grafs.Spritesheet;
 import lpoo.ligue_4.main.Game;
@@ -38,7 +38,7 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 				e.update();
 			}
 			
-			if(Round%2!=0) {
+			if(Round%2!=0||Game.p2) {
 				//Checa se o mouse se encontra dentro do tabuleiro e em qual coluna esta em cima
 				if((Game.xPos>Game.WIDTH/offSet) && (Game.xPos<((Width*tileSize)-3+Game.WIDTH/offSet)) &&
 				   (Game.yPos>=Game.HEIGHT/offSet) && (Game.yPos<=((Height*tileSize)+Game.HEIGHT/offSet))) {
@@ -93,7 +93,7 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 				}
 			}
 			
-			else if(!chosen){
+			else if(!chosen && !Game.p2){
 				if(!Game.dificil) {
 					colunaChosen = ia.EasyPeasy(this.buxinCheio,colunaSelected);
 				}
@@ -126,7 +126,6 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 			//Insere a coluna e a linha no tabuleiro
 			if(chosen && !drop && !buxinCheio[colunaChosen]) {
 				
-				sounds.playMP3WithTimeout(Sound_Ficha, 1000);
 				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();
 				fichas.get(Round-1).setID(colunaChosen, dropTo);//HERE
 				
@@ -155,7 +154,7 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 							
 							//HERE
 							for(int i=0;  i<fichas.size(); i++) {
-								Ficha e = fichas.get(i);
+								FichaE e = fichas.get(i);
 								int[] id = e.getID();
 								if( ((id[0] == X_Maluco) && (id[1] == dropTo))|| ((id[1] == colunaChosen) && (id[0] == Y_Maluco)) ) {
 									e.setModelo(fichas.get(Round-1).getModelo());
@@ -198,60 +197,7 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 			}
 			}
 		}
-		//}
-		// AQ
-	
-	
-	public void render(Graphics g) {
 
-		for(int x = 0; x < Width; x++) {
-			for(int y = 0; y < Height; y++) {
-				
-				g.setColor(Color.white); //slots das fichas
-				g.drawRect((x*tileSize)+Game.WIDTH/offSet, (y*tileSize)+Game.HEIGHT/offSet, tileSize, tileSize);
-				
-				for(int i=0; i<Round; i++) {
-					Entity e = fichas.get(i);
-					e.render(g);
-				}
-				
-				
-				
-				cor = cores[Round- 1];
-				fichaAr = new Ficha(cor, 0, 0, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
-				
-				//Destaca a coluna que o mouse esta em cima
-				if(dentro && !selected && !drop) {
-					fichaAr.setX((coluna*tileSize)+Game.WIDTH/offSet);
-					fichaAr.setY(Game.HEIGHT/offSet-dropSet);
-					fichaAr.render(g);
-					g.setColor(Color.black);
-					g.drawRect((coluna*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);	
-				}
-					
-				//Destaca a coluna selecionada
-				if(selected) {	
-					fichaAr.setX((colunaSelected*tileSize)+Game.WIDTH/offSet);
-					fichaAr.setY(Game.HEIGHT/offSet-dropSet);
-					fichaAr.render(g);
-					g.setColor(Color.red);
-					g.drawRect((colunaSelected*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);
-				}
-				
-				//Animação de queda				
-				if(drop) {
-					fichaAr.setX((colunaChosen*tileSize)+Game.WIDTH/offSet);
-					fichaAr.setY((Game.HEIGHT/offSet)-dropSet+(int)dropping);
-					fichaAr.render(g);
-					dropping+=0.1;
-					if((int)dropping-dropSet>=(dropTo*tileSize)-offSet+dropSet-tileSize) {
-						drop=false;
-						
-					}
-				}
-			}
-		}
-	}
 
 	public void Modo_Maluco(int linha, int coluna) throws UShouldNotBeHere{
 		

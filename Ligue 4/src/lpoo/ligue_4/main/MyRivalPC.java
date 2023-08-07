@@ -28,12 +28,18 @@ public class MyRivalPC {
 		try {
 			Tabuleiro_Turbo.ChecaCanto(coluna);
 			colunaRival = random.nextInt(3) - 1 + coluna ;
-			while(colunaRival == 0) {
-				
+			while(colunaRival == 0) {	
 				colunaRival = random.nextInt(3) -1 + coluna;
 			}
-		} catch (UShouldNotBeHere e) {
+		} 
+		catch (UShouldNotBeHere e) {
 			e.printStackTrace();
+			if (colunaRival == -1) {
+				colunaRival = coluna +1;
+			}
+			if (colunaRival == 7) {
+				colunaRival = coluna -1;
+			}
 			colunaRival = random.nextInt(3) - 1 + coluna ;
 		}
 		
@@ -54,12 +60,24 @@ public class MyRivalPC {
 				} 
 				catch (BusaoLotado e) {
 					e.printStackTrace();
-					colunaRival = random.nextInt(3)-1  + coluna;
+					if (colunaRival == -1) {
+						colunaRival = coluna +1;
+					}
+					if (colunaRival == 7) {
+						colunaRival = coluna -1;
+					}
+					colunaRival = random.nextInt(3) - 1 + coluna ;
 				}
 			}
 		} catch (UShouldNotBeHere e) {
 			e.printStackTrace();
-			colunaRival = random.nextInt(3)-1  + coluna;
+			if (colunaRival == -1) {
+				colunaRival = coluna +1;
+			}
+			if (colunaRival == 7) {
+				colunaRival = coluna -1;
+			}
+			colunaRival = random.nextInt(3) - 1 + coluna ;
 		}
 		
 		

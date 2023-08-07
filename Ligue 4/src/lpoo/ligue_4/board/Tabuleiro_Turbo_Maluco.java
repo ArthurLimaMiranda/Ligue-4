@@ -141,8 +141,9 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 				//chosen = false;
 				
 				
-				CrazynessLevel();
-				
+				if(Round >= 2) {
+					CrazynessLevel();
+					}							
 				try {
 					
 					if(Crazyness == true) {
@@ -156,23 +157,32 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 							for(int i=0;  i<fichas.size(); i++) {
 								FichaE e = fichas.get(i);
 								int[] id = e.getID();
-								if( ((id[0] == X_Maluco) && (id[1] == dropTo))|| ((id[1] == colunaChosen) && (id[0] == Y_Maluco)) ) {
+								if( ((id[0] == X_Maluco)  && (id[1] == dropTo)) || ((id[0] == colunaChosen)  && (id[1] == Y_Maluco)) ) {
 									e.setModelo(fichas.get(Round-1).getModelo());
 									e.setSprite(fichas.get(Round-1).getSprite());
 								}
 							}
 							
-							//ARTHUR BOTA ALGO AQUI PRA RENDEZIRAR A PEÇA EH ISSO
-							
-							
+							//ARTHUR BOTA ALGO AQUI PRA RENDEZIRAR A PEÇA EH ISSO			
+							int vit = ChecarWin(dropTo, colunaChosen);
+							if(vit!=0) {
+								if(vit==1) {
+									Game.vitP1 = true;
+								}
+								
+								
+								else {
+									Game.vitP2 = true;
+								}
+							}
 						}
+						
+						
 					}
 					
 				} catch (UShouldNotBeHere  e) {
 					System.out.println("YOU SHOULDN´T BE HERE!");
 				}
-				//ATIVA MODO MALUCO!!
-				
 				
 				int vit = ChecarWin(dropTo, colunaChosen);
 				if(vit!=0) {
@@ -203,13 +213,17 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 		
 		int Slot_Central = TABULEIRO[coluna][linha];
 		
-		int Crazy_coluna = random.nextInt(3)- 1 + coluna;
-		int Crazy_linha = random.nextInt(3)- 1 + linha;
 		
 		int Slot_Maluco;
 		
 		trocar = false;
-														
+		
+		
+		while(trocar == false) {
+			
+			int Crazy_coluna = random.nextInt(3)- 1 + coluna;
+			int Crazy_linha = random.nextInt(3)- 1 + linha;
+			
 			if(Crazy_coluna >= Width ) {// fim do tabuleiro	
 				UShouldNotBeHere e = new UShouldNotBeHere();
 				throw e;
@@ -230,7 +244,9 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 				 Slot_Maluco = TABULEIRO[Crazy_coluna][Crazy_linha];
 			}
 			
-			System.out.println("Crazy_coluna:" + Crazy_coluna + "Crazy_linha:" + Crazy_linha);	
+			
+			
+					
 			if(Slot_Central == Slot_Maluco) {
 				
 				trocar = false;
@@ -240,7 +256,7 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 				trocar = false;
 			}
 			else {
-				
+				System.out.println("Crazy_coluna:" + Crazy_coluna + "Crazy_linha:" + Crazy_linha);	
 				trocar = true;	
 			
 				X_Maluco =  Crazy_coluna;
@@ -249,6 +265,8 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 				System.out.println("MALUCO ON:" + trocar);
 				
 			}
+			
+		}
 			
 												
 		

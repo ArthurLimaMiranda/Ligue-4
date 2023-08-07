@@ -26,6 +26,7 @@ import lpoo.ligue_4.board.Tabuleiro_Turbo;
 import lpoo.ligue_4.exceptions.BusaoLotado;
 import lpoo.ligue_4.exceptions.LimiteNome;
 import lpoo.ligue_4.grafs.Cenario;
+import lpoo.ligue_4.grafs.Spritesheet;
 import lpoo.ligue_4.sound_track.SoundEffects;
 
 public  class Game extends Canvas implements Runnable, MouseMotionListener, MouseListener ,KeyListener {
@@ -44,6 +45,8 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	public static int modoJogo = 0;
 	public static boolean p2 = false, dificil = false;
 
+	public static Spritesheet spritesheetGame;
+	
 	public static Cenario cenario;
 	public Tabuleiro_Turbo_Maluco tabuleiro_maluco;
 	public Tabuleiro_Turbo tabuleiro_turbo;
@@ -71,7 +74,8 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		this.setFocusable(true);
 		this.addKeyListener(this);
 		
-		cenario = new Cenario("res/spritesheet.png");
+		spritesheetGame = new Spritesheet("res/spritesheet.png");
+		cenario = new Cenario("res/map.png");
 		player1 = new Player(1);
 		player2 = new Player(2);
 		ranking = new Ranking();
@@ -172,10 +176,11 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 			return;
 		}	
 		Graphics g = image.getGraphics();
-		g.setColor(Color.BLUE);
+		g.setColor(new Color(0,0,0));
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		if(gameState.equals("Normal")) {
+			cenario.render(g);
 			if(modoJogo==0) {
 				this.tabuleiro.render(g);
 			}			

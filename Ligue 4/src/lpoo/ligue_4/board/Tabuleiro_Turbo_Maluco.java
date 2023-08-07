@@ -23,6 +23,7 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 	//private int CrazynessLevel;
 
 	
+	
 	public Tabuleiro_Turbo_Maluco() {
 		random = new Random();
 	}

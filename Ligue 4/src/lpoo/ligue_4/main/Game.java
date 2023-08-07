@@ -1,5 +1,7 @@
 package lpoo.ligue_4.main;
 
+import lpoo.ligue_4.sound_track.*;
+
 
 import java.awt.Canvas;
 
@@ -61,10 +63,15 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 	private int framesPress = 0;
 	SoundEffects sounds = new SoundEffects();
 	protected String Sound_Win = "res/bright-notifications-151766 (mp3cut.net).mp3";
+	protected static String Sound_Gamer = "res/Different Names.mp3";
+	
+	static SoundGame soundgame;
 	
 	
 	
 	public Game() {
+		
+		
 		
 		this.setPreferredSize(new Dimension(WIDTH*SCALE,HEIGHT*SCALE)); // dimensiona tela
 		this.addMouseListener(this); //EVENTOS DO MOUSE
@@ -105,7 +112,12 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
+		soundgame = new SoundGame(Sound_Gamer);
+		
 		new Thread(game).start();	
+		
+		soundgame.play();
+		
 		
 	}
 	

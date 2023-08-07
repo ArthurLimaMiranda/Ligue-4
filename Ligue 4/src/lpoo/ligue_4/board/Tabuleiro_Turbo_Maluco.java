@@ -219,8 +219,9 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 		
 		trocar = false;
 		
+		int tentativas = 0;
 		
-		while(trocar == false) {
+		while(trocar == false && tentativas <=7) {
 			
 			int Crazy_coluna = random.nextInt(3)- 1 + coluna;
 			int Crazy_linha = random.nextInt(3)- 1 + linha;
@@ -246,7 +247,7 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 			}
 			
 			
-			
+			tentativas ++;
 					
 			if(Slot_Central == Slot_Maluco) {
 				

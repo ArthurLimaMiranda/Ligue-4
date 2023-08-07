@@ -258,6 +258,7 @@ public class Tabuleiro implements InterfaceTabuleiro{
 				fichaAr = new FichaE(cor, 0, 0, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
 				
 				if(!Game.gameState.equals("Game_Over")) {
+					fichaAr.render(g);
 					//Destaca a coluna que o mouse esta em cima
 					if(dentro && !selected && !drop) {
 						fichaAr.setX((coluna*tileSize)+Game.WIDTH/offSet);

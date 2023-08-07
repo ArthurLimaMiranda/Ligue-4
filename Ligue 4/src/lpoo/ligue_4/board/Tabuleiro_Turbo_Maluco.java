@@ -157,7 +157,7 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 							for(int i=0;  i<fichas.size(); i++) {
 								FichaE e = fichas.get(i);
 								int[] id = e.getID();
-								if( ((id[0] == X_Maluco)  && (id[1] == dropTo)) || ((id[0] == colunaChosen)  && (id[1] == Y_Maluco)) ) {
+								if( ((id[0] == X_Maluco)  && (id[1] == Y_Maluco))    ) {
 									e.setModelo(fichas.get(Round-1).getModelo());
 									e.setSprite(fichas.get(Round-1).getSprite());
 								}

@@ -36,10 +36,16 @@ public class SoundGame implements Runnable {
 
     @Override
     public void run() {
-        try {
-            player.play();
+   	 try {
+            while (isPlaying) {
+                player.play();
+                // Reinicia a reprodução do áudio quando chegar ao final
+                FileInputStream fis = new FileInputStream(filePath);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                player = new Player(bis);
+            }
         } catch (Exception e) {
             System.out.println("Erro ao reproduzir o áudio: " + e);
         }
-    }
+   }
 }

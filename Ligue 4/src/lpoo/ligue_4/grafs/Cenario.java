@@ -46,6 +46,62 @@ public class Cenario {
 					else if(pixels[pixelAt]==0xFF7F6A00) {
 						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOGATO4);
 					}
+					
+					
+					else if(pixels[pixelAt]==0xFFA17FFF) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE1);
+					}
+					else if(pixels[pixelAt]==0xFF503F7F) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE2);
+					}
+					else if(pixels[pixelAt]==0xFF606060) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE3);
+					}
+					else if(pixels[pixelAt]==0xFF4CFF00) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE4);
+					}
+					else if(pixels[pixelAt]==0xFF267F00) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE5);
+					}
+					else if(pixels[pixelAt]==0xFF7FFF8E) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE6);
+					}
+					else if(pixels[pixelAt]==0xFF3F7F47) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE7);
+					}
+					else if(pixels[pixelAt]==0xFF0094FF) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE8);
+					}
+					else if(pixels[pixelAt]==0xFF004A7F) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE9);
+					}
+					else if(pixels[pixelAt]==0xFF7FC9FF) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE10);
+					}
+					else if(pixels[pixelAt]==0xFF3F647F) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE11);
+					}
+					else if(pixels[pixelAt]==0xFFFF006E) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE12);
+					}
+					else if(pixels[pixelAt]==0xFF7F0037) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE13);
+					}
+					else if(pixels[pixelAt]==0xFFFF7FB6) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE14);
+					}
+					else if(pixels[pixelAt]==0xFFFF7F7F) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE15);
+					}
+					else if(pixels[pixelAt]==0xFF7F3F3F) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE16);
+					}
+					else if(pixels[pixelAt]==0xFFFF3F5A) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE17);
+					}
+					else if(pixels[pixelAt]==0xFF7F3F5B) {
+						tiles[pixelAt] = new Tile(xx*32,yy*32, Tile.TILE_MUROTOPOARVORE18);
+					}
 				}
 			}
 		}catch (IOException e) {e.printStackTrace();}

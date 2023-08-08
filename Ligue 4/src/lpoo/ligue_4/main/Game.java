@@ -1,10 +1,6 @@
 package lpoo.ligue_4.main;
 
-import lpoo.ligue_4.sound_track.*;
-
-
 import java.awt.Canvas;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -23,13 +19,14 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 import lpoo.ligue_4.board.Tabuleiro;
-import lpoo.ligue_4.board.Tabuleiro_Turbo_Maluco;
 import lpoo.ligue_4.board.Tabuleiro_Turbo;
-import lpoo.ligue_4.exceptions.BusaoLotado;
+import lpoo.ligue_4.board.Tabuleiro_Turbo_Maluco;
 import lpoo.ligue_4.exceptions.LimiteNome;
 import lpoo.ligue_4.grafs.Cenario;
 import lpoo.ligue_4.grafs.Spritesheet;
+import lpoo.ligue_4.ranking.Ranking;
 import lpoo.ligue_4.sound_track.SoundEffects;
+import lpoo.ligue_4.sound_track.SoundGame;
 
 public  class Game extends Canvas implements Runnable, MouseMotionListener, MouseListener ,KeyListener {
 
@@ -90,10 +87,6 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 		try {
 			ranking.LerRanking();
 		} catch (IOException e) {e.printStackTrace();}
-		
-		for(int i=0; i<Game.ranking.partidas.size(); i++) {
-			System.out.println(Game.ranking.partidas.get(i)[2]);
-		}
 		
 		menu = new Menu();
 		

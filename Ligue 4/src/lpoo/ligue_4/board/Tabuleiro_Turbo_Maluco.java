@@ -20,10 +20,7 @@ public class Tabuleiro_Turbo_Maluco extends Tabuleiro{
 	private  boolean trocar; 
 	private int X_Maluco, Y_Maluco;
 	private boolean Crazyness;
-	//private int CrazynessLevel;
 
-	
-	
 	public Tabuleiro_Turbo_Maluco() {
 		random = new Random();
 	}

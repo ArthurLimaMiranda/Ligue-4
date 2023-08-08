@@ -23,27 +23,6 @@ public class Menu {
 	
 	public boolean up, down, left, right, enter, writeNameP1=false, writeNameP2=false, noFile=true;
 	
-	public Menu() {
-		vencedoresLista = new ArrayList<Vencedores>();
-		for(int i=0; i<Game.ranking.partidas.size(); i++) {
-			Vencedores winner = new Vencedores(Game.ranking.partidas.get(i)[2]);
-			boolean temNome = false;
-			for(int a=0; a<vencedoresLista.size(); a++) {
-				Vencedores v = vencedoresLista.get(a);
-				if(v.getNome().equals(winner.getNome())) {
-					temNome = true;
-					v.somarPontos();
-				}
-			}
-			if(!temNome && !(!Game.ranking.partidas.get(i)[4].equals("PvP") && !Game.ranking.partidas.get(i)[0].equals(winner.getNome()))) {
-				vencedoresLista.add(winner);
-			}
-			
-		}
-		Collections.sort(vencedoresLista, Comparator.comparing(Vencedores::getPontos));
-		Collections.reverse(vencedoresLista);
-	}
-	
 	public void setTela(int tela) {
 		this.tela=tela;
 	}
@@ -161,6 +140,27 @@ public class Menu {
 					tela=2;
 					try {
 						Game.ranking.LerRanking();
+						
+						vencedoresLista = new ArrayList<Vencedores>();
+						for(int i=0; i<Game.ranking.partidas.size(); i++) {
+							Vencedores winner = new Vencedores(Game.ranking.partidas.get(i)[2]);
+							boolean temNome = false;
+							for(int a=0; a<vencedoresLista.size(); a++) {
+								Vencedores v = vencedoresLista.get(a);
+								if(v.getNome().equals(winner.getNome())) {
+									temNome = true;
+									v.somarPontos();
+								}
+							}
+							if(!temNome && !(!Game.ranking.partidas.get(i)[4].equals("PvP") && !Game.ranking.partidas.get(i)[0].equals(winner.getNome()))) {
+								vencedoresLista.add(winner);
+							}
+							
+						}
+						Collections.sort(vencedoresLista, Comparator.comparing(Vencedores::getPontos));
+						Collections.reverse(vencedoresLista);
+						
+						
 					} catch (IOException e) {e.printStackTrace();}
 					choice=0;
 				}

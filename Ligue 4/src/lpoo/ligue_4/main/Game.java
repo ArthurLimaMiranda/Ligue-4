@@ -222,11 +222,14 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 			g2.setColor(Color.white);
 			
 			String linha1 = "Fim de jogo,";
+			String linha2 = "";
 			if(vitP1) {
-				linha1+= " vitoria de: "+ player1.getNome();
+				linha1+= " vitoria de: ";
+				linha2+= player1.getNome();
 			}
 			else if(player2.getTipo()==2) {
-				linha1+= " vitoria de: "+player2.getNome();
+				linha1+= " vitoria de: ";
+				linha2+= player2.getNome();
 			}
 			else if(player2.getTipo()==3) {
 				linha1+= " vitoria do computador";
@@ -235,12 +238,13 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 				linha1+= " empate";
 			}
 			
-			g2.drawString(linha1, (WIDTH*SCALE)/2-205-(linha1.length()/2), HEIGHT*SCALE/2-30);
+			g2.drawString(linha1, (WIDTH*SCALE)/2-140-(linha1.length()/2), HEIGHT*SCALE/2-30);
+			g2.drawString(linha2, (WIDTH*SCALE)/2-140-(linha1.length()/2), HEIGHT*SCALE/2);
 			
 			if(press) {
 				g2.setColor(Color.gray);
 				g2.setFont(new Font("arial", Font.BOLD, 20));
-				g2.drawString(">Pressione qualquer tecla para continuar<", (WIDTH*SCALE)/2-198, HEIGHT*SCALE/2+30);
+				g2.drawString(">Pressione qualquer tecla para continuar<", (WIDTH*SCALE)/2-198, HEIGHT*SCALE/2+60);
 			}
 		}
 		
@@ -377,7 +381,7 @@ public  class Game extends Canvas implements Runnable, MouseMotionListener, Mous
 			if(menu.writeNameP1 || menu.writeNameP2) {
 				char c = e.getKeyChar();
 				if (Character.isAlphabetic(c) || Character.isDigit(c)) {
-					if(playerName.length()<=14) {
+					if(playerName.length()<=12) {
 						playerName += c;
 					}
                    

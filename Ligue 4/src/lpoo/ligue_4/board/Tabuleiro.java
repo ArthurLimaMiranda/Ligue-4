@@ -15,12 +15,12 @@ import lpoo.ligue_4.main.MyRivalPC;
 
 public class Tabuleiro implements InterfaceTabuleiro{
 
-	public static final int Width = 7 , Height = 6, offSet = 3;
+	public static final int Width = 7 , Height = 6, offSet = 3, tileSize = 30, dropSet = 7+tileSize, nRounds = 42;
 	public static int[][]  TABULEIRO;
 	
-	protected int tileSize = 30, dropSet = 7+tileSize, dropTo;
+	protected int coluna, colunaSelected = -1, colunaChosen = -1, dropTo;
 	protected float dropping;
-	protected int coluna, colunaSelected = -1, colunaChosen = -1;
+	
 	protected boolean dentro = false, selected = false, chosen = false, drop = false;
 	protected boolean[] buxinCheio = new boolean[7];
 	
@@ -32,8 +32,6 @@ public class Tabuleiro implements InterfaceTabuleiro{
 	
 	protected int [] cores = new int [42]; // salvar as cores das fichas
 	protected int cor;
-	
-	protected int nRounds = 42;
 	
 	protected int Round = 1;	//Round inicial
 	
@@ -99,16 +97,61 @@ public class Tabuleiro implements InterfaceTabuleiro{
 		
 		if(!drop) {
 			for(int i=0; i<fichas.size(); i++) {
-				Entity e = fichas.get(i);
+				FichaE e = fichas.get(i);
 				e.update();
 			}
 			
+			
+			for(int w=0; w<Width; w++) {
+				if((w!=colunaSelected)) {
+					for(int h=0; h<Height; h++) {
+						if(w==0 && h==0) {
+							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*5, 0, 32, 32));
+						}
+						else if(w==0 && h==Height-1) {
+							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*6, 0, 32, 32));;					
+						}
+						else if(w==Width-1 && h==0) {
+							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*7, 0, 32, 32));
+						}
+						else if(w==Width-1 && h==Height-1) {
+							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*8, 0, 32, 32));
+						}
+						else {
+							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*4, 0, 32, 32));
+						}
+						
+					}
+				}
+			}
+
 			if(Round%2!=0||Game.p2) {
 				//Checa se o mouse se encontra dentro do tabuleiro e em qual coluna esta em cima
 				if((Game.xPos>Game.WIDTH/offSet) && (Game.xPos<((Width*tileSize)-3+Game.WIDTH/offSet)) &&
 				   (Game.yPos>=Game.HEIGHT/offSet) && (Game.yPos<=((Height*tileSize)+Game.HEIGHT/offSet))) {
 					coluna = (Game.xPos/tileSize)-(Game.WIDTH/tileSize/offSet);	
 					dentro = true;
+
+					if(coluna!=colunaSelected && coluna!=colunaChosen ) {
+						for(int h=0; h<Height; h++) {
+							if(coluna==0 && h==0) {
+								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*5, 32*2, 32, 32));
+							}
+							else if(coluna==0 && h==Height-1) {
+								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*6, 32*2, 32, 32));;					
+							}
+							else if(coluna==Width-1 && h==0) {
+								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*7, 32*2, 32, 32));
+							}
+							else if(coluna==Width-1 && h==Height-1) {
+								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*8, 32*2, 32, 32));
+							}
+							else {
+								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*4, 32*2, 32, 32));
+							}
+							
+						}
+					}
 					
 					//Seleciona a coluna desejada
 					if(Game.clicked) {
@@ -116,6 +159,26 @@ public class Tabuleiro implements InterfaceTabuleiro{
 						if(!selected) {
 							selected = true;
 							colunaSelected = coluna;
+							
+							for(int h=0; h<Height; h++) {
+								if(colunaSelected==0 && h==0) {
+									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*5, 32*1, 32, 32));
+								}
+								else if(colunaSelected==0 && h==Height-1) {
+									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*6, 32*1, 32, 32));;					
+								}
+								else if(colunaSelected==Width-1 && h==0) {
+									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*7, 32*1, 32, 32));
+								}
+								else if(colunaSelected==Width-1 && h==Height-1) {
+									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*8, 32*1, 32, 32));
+								}
+								else {
+									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*4, 32*1, 32, 32));
+								}
+								
+							}
+							
 						}
 						
 						//Confirma a coluna, ativando a animação de queda ou cancela a seleção
@@ -147,6 +210,7 @@ public class Tabuleiro implements InterfaceTabuleiro{
 							else {
 								chosen = false;
 								selected = false;
+								colunaSelected = -1;
 							}
 						}
 					}
@@ -264,8 +328,6 @@ public class Tabuleiro implements InterfaceTabuleiro{
 						fichaAr.setX((coluna*tileSize)+Game.WIDTH/offSet);
 						fichaAr.setY(Game.HEIGHT/offSet-dropSet);
 						fichaAr.render(g);
-						g.setColor(Color.black);
-						g.drawRect((coluna*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);	
 					}
 						
 					//Destaca a coluna selecionada
@@ -273,8 +335,6 @@ public class Tabuleiro implements InterfaceTabuleiro{
 						fichaAr.setX((colunaSelected*tileSize)+Game.WIDTH/offSet);
 						fichaAr.setY(Game.HEIGHT/offSet-dropSet);
 						fichaAr.render(g);
-						g.setColor(Color.red);
-						g.drawRect((colunaSelected*tileSize)+Game.WIDTH/offSet, Game.HEIGHT/offSet, tileSize, Height*tileSize);
 					}
 					
 					//Animação de queda				

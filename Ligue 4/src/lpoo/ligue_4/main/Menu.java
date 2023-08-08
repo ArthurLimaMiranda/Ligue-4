@@ -13,9 +13,7 @@ import lpoo.ligue_4.sound_track.SoundEffects;
 public class Menu {
 
 	SoundEffects sounds = new SoundEffects();
-	private String Sound_Menu = "res/light-pull-string-32448 (mp3cut.net).mp3";
-	
-	
+	private String Sound_Menu = "res/light-pull-string-32448 (mp3cut.net).mp3";	
 	private int choice=0, coluna=0, tela=0, options=4, linhaMax=4, maxColuna=2, modosDeJogo=3, modoRanking = 0;
 	private int[] maxChoice = {options-1, linhaMax, 1};
 	private String modoJogo="Modo Normal", modoShowRanking ="MelhoresJogadores";

@@ -26,6 +26,29 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 				e.update();
 			}
 			
+			for(int w=0; w<Width; w++) {
+				if((w!=colunaSelected)) {
+					for(int h=0; h<Height; h++) {
+						if(w==0 && h==0) {
+							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*5, 0, 32, 32));
+						}
+						else if(w==0 && h==Height-1) {
+							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*6, 0, 32, 32));;					
+						}
+						else if(w==Width-1 && h==0) {
+							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*7, 0, 32, 32));
+						}
+						else if(w==Width-1 && h==Height-1) {
+							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*8, 0, 32, 32));
+						}
+						else {
+							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*4, 0, 32, 32));
+						}
+						
+					}
+				}
+			}			
+			
 			if(Round%2!=0||Game.p2) {
 				//Checa se o mouse se encontra dentro do tabuleiro e em qual coluna esta em cima
 				if((Game.xPos>Game.WIDTH/offSet) && (Game.xPos<((Width*tileSize)-3+Game.WIDTH/offSet)) &&
@@ -33,12 +56,52 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 					coluna = (Game.xPos/tileSize)-(Game.WIDTH/tileSize/offSet);	
 					dentro = true;
 					
+					if(coluna!=colunaSelected && coluna!=colunaChosen ) {
+						for(int h=0; h<Height; h++) {
+							if(coluna==0 && h==0) {
+								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*5, 32*2, 32, 32));
+							}
+							else if(coluna==0 && h==Height-1) {
+								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*6, 32*2, 32, 32));;					
+							}
+							else if(coluna==Width-1 && h==0) {
+								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*7, 32*2, 32, 32));
+							}
+							else if(coluna==Width-1 && h==Height-1) {
+								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*8, 32*2, 32, 32));
+							}
+							else {
+								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*4, 32*2, 32, 32));
+							}
+							
+						}
+					}
+					
 					//Seleciona a coluna desejada
 					if(Game.clicked) {
 						Game.clicked = false;
 						if(!selected) {
 							selected = true;
 							colunaSelected = coluna;
+							
+							for(int h=0; h<Height; h++) {
+								if(colunaSelected==0 && h==0) {
+									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*5, 32*1, 32, 32));
+								}
+								else if(colunaSelected==0 && h==Height-1) {
+									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*6, 32*1, 32, 32));;					
+								}
+								else if(colunaSelected==Width-1 && h==0) {
+									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*7, 32*1, 32, 32));
+								}
+								else if(colunaSelected==Width-1 && h==Height-1) {
+									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*8, 32*1, 32, 32));
+								}
+								else {
+									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*4, 32*1, 32, 32));
+								}
+								
+							}
 						}
 						
 						//Confirma a coluna, ativando a animação de queda ou cancela a seleção
@@ -70,6 +133,7 @@ public class Tabuleiro_Turbo extends Tabuleiro {
 							else {
 								chosen = false;
 								selected = false;
+								colunaSelected = -1;
 							}
 						}
 					}

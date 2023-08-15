@@ -4,7 +4,7 @@ package lpoo.ligue_4.main;
 import java.util.Random;
 
 import lpoo.ligue_4.board.Tabuleiro;
-import lpoo.ligue_4.board.Tabuleiro_Turbo;
+import lpoo.ligue_4.board.TabuleiroTurbo;
 import lpoo.ligue_4.exceptions.BusaoLotado;
 import lpoo.ligue_4.exceptions.UShouldNotBeHere;
 
@@ -16,17 +16,17 @@ public class MyRivalPC {
 	public MyRivalPC() {
 		colunaTemp = random.nextInt(7);
 	}	
-	public void TaCheio (boolean status) throws BusaoLotado {
+	public void taCheio (boolean status) throws BusaoLotado {
 		if(status) {
 			BusaoLotado e = new BusaoLotado();
 			throw e;
 		}
 	}
 	
-	public int BLOCKYOU(int coluna) {
+	public int blockYou(int coluna) {
 		
 		try {
-			Tabuleiro_Turbo.ChecaCanto(coluna);
+			TabuleiroTurbo.checaCanto(coluna);
 			colunaRival = random.nextInt(3) - 1 + coluna ;
 			while(colunaRival == 0) {	
 				colunaRival = random.nextInt(3) -1 + coluna;
@@ -48,14 +48,14 @@ public class MyRivalPC {
 		return colunaRival;
 	}
 	
-	public int EasyPeasy(boolean[] colunasStatus, int coluna){
+	public int easyPeasy(boolean[] colunasStatus, int coluna){
 			
 		try {
-			Tabuleiro_Turbo.ChecaCanto(coluna);
+			TabuleiroTurbo.checaCanto(coluna);
 			colunaRival = random.nextInt(3)- 1  + coluna;
 			while (true){
 				try {
-					TaCheio(colunasStatus[colunaRival]);
+					taCheio(colunasStatus[colunaRival]);
 					break;
 				} 
 				catch (BusaoLotado e) {
@@ -85,7 +85,7 @@ public class MyRivalPC {
 		return colunaRival;	
 	}
 	
-	public int INEVERGonnaLetUWin(int[][] tabuleiro, int Height, int Width, boolean[] colunasStatus){
+	public int iNeverGonnaLetUWin(int[][] tabuleiro, int Height, int Width, boolean[] colunasStatus){
 		
 		int slot01, slot02, slot03, slot04;	
 		
@@ -154,7 +154,7 @@ public class MyRivalPC {
 		colunaTemp = random.nextInt(7);
 		while (true){
 			try {
-				TaCheio(colunasStatus[colunaTemp]);
+				taCheio(colunasStatus[colunaTemp]);
 				break;
 			} 
 			catch (BusaoLotado e) {

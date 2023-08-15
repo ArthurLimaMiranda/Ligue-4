@@ -10,6 +10,6 @@ public interface InterfaceTabuleiro {
 	
 	public abstract void render(Graphics g);
 
-	public abstract int ChecarWin(int linha, int coluna);
+	public abstract int checarWin(int linha, int coluna);
 
 }

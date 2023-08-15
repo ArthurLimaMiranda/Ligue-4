@@ -15,7 +15,7 @@ import lpoo.ligue_4.main.MyRivalPC;
 
 public class Tabuleiro implements InterfaceTabuleiro{
 
-	public static final int Width = 7 , Height = 6, offSet = 3, tileSize = 30, dropSet = 7+tileSize, nRounds = 42;
+	public static final int WIDTH = 7 , HEIGHT = 6, OFFSET = 3, TILESIZE = 30, DROPSET = 7+TILESIZE, NROUNDS = 42;
 	public static int[][]  TABULEIRO;
 	
 	protected int coluna, colunaSelected = -1, colunaChosen = -1, dropTo;
@@ -30,7 +30,7 @@ public class Tabuleiro implements InterfaceTabuleiro{
 	protected Spritesheet spritesheet;
 	protected MyRivalPC ia;
 	
-	protected int [] cores = new int [42]; // salvar as cores das fichas
+	protected int [] cores = new int [42]; 	//salvar as cores das fichas
 	protected int cor;
 	
 	protected int Round = 1;	//Round inicial
@@ -41,13 +41,14 @@ public class Tabuleiro implements InterfaceTabuleiro{
 	SoundEffects sounds = new SoundEffects();
 	public Tabuleiro() {
 				
-		TABULEIRO = new int[Width][Height];
-		tabuleiroGraf = new TabuleiroE[Width][Height];
+		TABULEIRO = new int[WIDTH][HEIGHT];
+		tabuleiroGraf = new TabuleiroE[WIDTH][HEIGHT];
 		fichas = new ArrayList<FichaE>();
 		spritesheet = new Spritesheet("res/spritesheet.png");
 		ia = new MyRivalPC();
 		
-		for (int a = 0; a < nRounds; a++) {
+		//Adiciona as fichas a cada Round com as cores certas
+		for (int a = 0; a < NROUNDS; a++) {
 			
 			if (a % 2 != 0 && Game.player2.getTipo() == 2) {			
 				fichas.add(new FichaE(2, 0, 0, 32, 32, spritesheet.getSprite(32*2, 0, 32, 32)));	
@@ -68,18 +69,18 @@ public class Tabuleiro implements InterfaceTabuleiro{
 			buxinCheio[a] = false;
 		}
 		
-		for(int w=0; w<Width; w++) {
-			for(int h=0; h<Height; h++) {
+		for(int w=0; w<WIDTH; w++) {
+			for(int h=0; h<HEIGHT; h++) {
 				if(w==0 && h==0) {
 					tabuleiroGraf[w][h] = new TabuleiroE(0, 0, 32, 32, spritesheet.getSprite(32*5, 0, 32, 32));
 				}
-				else if(w==0 && h==Height-1) {
+				else if(w==0 && h==HEIGHT-1) {
 					tabuleiroGraf[w][h] = new TabuleiroE(0, 0, 32, 32, spritesheet.getSprite(32*6, 0, 32, 32));					
 				}
-				else if(w==Width-1 && h==0) {
+				else if(w==WIDTH-1 && h==0) {
 					tabuleiroGraf[w][h] = new TabuleiroE(0, 0, 32, 32, spritesheet.getSprite(32*7, 0, 32, 32));
 				}
-				else if(w==Width-1 && h==Height-1) {
+				else if(w==WIDTH-1 && h==HEIGHT-1) {
 					tabuleiroGraf[w][h] = new TabuleiroE(0, 0, 32, 32, spritesheet.getSprite(32*8, 0, 32, 32));
 				}
 				else {
@@ -89,7 +90,7 @@ public class Tabuleiro implements InterfaceTabuleiro{
 			}
 		}
  	
-		//Adiciona as fichas a cada Round com as cores certas					
+							
 
 	}
 	
@@ -102,19 +103,19 @@ public class Tabuleiro implements InterfaceTabuleiro{
 			}
 			
 			
-			for(int w=0; w<Width; w++) {
+			for(int w=0; w<WIDTH; w++) {
 				if((w!=colunaSelected)) {
-					for(int h=0; h<Height; h++) {
+					for(int h=0; h<HEIGHT; h++) {
 						if(w==0 && h==0) {
 							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*5, 0, 32, 32));
 						}
-						else if(w==0 && h==Height-1) {
+						else if(w==0 && h==HEIGHT-1) {
 							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*6, 0, 32, 32));;					
 						}
-						else if(w==Width-1 && h==0) {
+						else if(w==WIDTH-1 && h==0) {
 							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*7, 0, 32, 32));
 						}
-						else if(w==Width-1 && h==Height-1) {
+						else if(w==WIDTH-1 && h==HEIGHT-1) {
 							tabuleiroGraf[w][h].setSprite(spritesheet.getSprite(32*8, 0, 32, 32));
 						}
 						else {
@@ -125,25 +126,25 @@ public class Tabuleiro implements InterfaceTabuleiro{
 				}
 			}
 
-			if(Round%2!=0||Game.p2) {
+			if(Round%2!=0||Game.P2) {
+				
 				//Checa se o mouse se encontra dentro do tabuleiro e em qual coluna esta em cima
-				if((Game.xPos>Game.WIDTH/offSet) && (Game.xPos<((Width*tileSize)-3+Game.WIDTH/offSet)) &&
-				   (Game.yPos>=Game.HEIGHT/offSet) && (Game.yPos<=((Height*tileSize)+Game.HEIGHT/offSet))) {
-					coluna = (Game.xPos/tileSize)-(Game.WIDTH/tileSize/offSet);	
+				if((Game.XPOS>Game.WIDTH/OFFSET) && (Game.XPOS<((WIDTH*TILESIZE)-3+Game.WIDTH/OFFSET)) && (Game.YPOS>=Game.HEIGHT/OFFSET) && (Game.YPOS<=((HEIGHT*TILESIZE)+Game.HEIGHT/OFFSET))) {
+					coluna = (Game.XPOS/TILESIZE)-(Game.WIDTH/TILESIZE/OFFSET);	
 					dentro = true;
 
 					if(coluna!=colunaSelected && coluna!=colunaChosen ) {
-						for(int h=0; h<Height; h++) {
+						for(int h=0; h<HEIGHT; h++) {
 							if(coluna==0 && h==0) {
 								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*5, 32*2, 32, 32));
 							}
-							else if(coluna==0 && h==Height-1) {
+							else if(coluna==0 && h==HEIGHT-1) {
 								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*6, 32*2, 32, 32));;					
 							}
-							else if(coluna==Width-1 && h==0) {
+							else if(coluna==WIDTH-1 && h==0) {
 								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*7, 32*2, 32, 32));
 							}
-							else if(coluna==Width-1 && h==Height-1) {
+							else if(coluna==WIDTH-1 && h==HEIGHT-1) {
 								tabuleiroGraf[coluna][h].setSprite(spritesheet.getSprite(32*8, 32*2, 32, 32));
 							}
 							else {
@@ -153,24 +154,24 @@ public class Tabuleiro implements InterfaceTabuleiro{
 						}
 					}
 					
-					//Seleciona a coluna desejada
-					if(Game.clicked) {
-						Game.clicked = false;
+					
+					if(Game.CLICKED) {	//Seleciona a coluna desejada
+						Game.CLICKED = false;
 						if(!selected) {
 							selected = true;
 							colunaSelected = coluna;
 							
-							for(int h=0; h<Height; h++) {
+							for(int h=0; h<HEIGHT; h++) {
 								if(colunaSelected==0 && h==0) {
 									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*5, 32*1, 32, 32));
 								}
-								else if(colunaSelected==0 && h==Height-1) {
+								else if(colunaSelected==0 && h==HEIGHT-1) {
 									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*6, 32*1, 32, 32));;					
 								}
-								else if(colunaSelected==Width-1 && h==0) {
+								else if(colunaSelected==WIDTH-1 && h==0) {
 									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*7, 32*1, 32, 32));
 								}
-								else if(colunaSelected==Width-1 && h==Height-1) {
+								else if(colunaSelected==WIDTH-1 && h==HEIGHT-1) {
 									tabuleiroGraf[colunaSelected][h].setSprite(spritesheet.getSprite(32*8, 32*1, 32, 32));
 								}
 								else {
@@ -181,15 +182,16 @@ public class Tabuleiro implements InterfaceTabuleiro{
 							
 						}
 						
-						//Confirma a coluna, ativando a animação de queda ou cancela a seleção
-						else {
+						
+						else {	//Confirma a coluna, ativando a animação de queda ou cancela a seleção
 							if(coluna == colunaSelected) {
 								colunaChosen = colunaSelected;
 								colunaSelected = -1;
 								chosen = true;
 								selected = false;
-								//Checa se há alguma linha vazia na coluna desejada
-								for(int lines=Height-1; lines>=0; lines--) {
+								
+								
+								for(int lines=HEIGHT-1; lines>=0; lines--) {	//Checa se há alguma linha vazia na coluna desejada
 									if(TABULEIRO[colunaChosen][lines] == 0) {
 										dropTo = lines;
 										break;
@@ -222,26 +224,27 @@ public class Tabuleiro implements InterfaceTabuleiro{
 				}
 			}
 			
-			else if(!chosen && !Game.p2){
-				if(!Game.dificil) {
-					colunaChosen = ia.EasyPeasy(this.buxinCheio, this.colunaChosen);
+			else if(!chosen && !Game.P2){
+				if(!Game.DIFICIL) {
+					colunaChosen = ia.easyPeasy(this.buxinCheio, this.colunaChosen);
 				}
 				
 				else {							
 					if(Round == 2) {
-						colunaChosen = ia.BLOCKYOU(this.colunaChosen);
+						colunaChosen = ia.blockYou(this.colunaChosen);
 						System.out.println("BLOCK");
 					}
 					else {
-						colunaChosen = ia.INEVERGonnaLetUWin(TABULEIRO, Height, Width, this.buxinCheio);
+						colunaChosen = ia.iNeverGonnaLetUWin(TABULEIRO, HEIGHT, WIDTH, this.buxinCheio);
 					}
 				}
 
 				colunaSelected = -1;
 				chosen = true;
 				selected = false;
-				//Checa se há alguma linha vazia na coluna desejada
-				for(int lines=Height-1; lines>=0; lines--) {
+				
+				
+				for(int lines=HEIGHT-1; lines>=0; lines--) {	//Checa se há alguma linha vazia na coluna desejada
 					if(TABULEIRO[colunaChosen][lines] == 0) {
 						dropTo = lines;
 						break;
@@ -253,27 +256,27 @@ public class Tabuleiro implements InterfaceTabuleiro{
 				
 			}
 			
-			//Insere a coluna e a linha no tabuleiro
-			if(chosen && !drop && !buxinCheio[colunaChosen]) {
+			
+			if(chosen && !drop && !buxinCheio[colunaChosen]) {	//Insere a coluna e a linha no tabuleiro
 				TABULEIRO[colunaChosen][dropTo] = fichas.get(Round-1).getModelo();	
 				fichas.get(Round-1).setID(colunaChosen, dropTo);
 				if(dropTo == 0) {
 					buxinCheio[colunaChosen] = true;
 				}
-				fichas.get(Round-1).setX((colunaChosen*tileSize)+Game.WIDTH/offSet);
-				fichas.get(Round-1).setY((dropTo*tileSize)+Game.HEIGHT/offSet);
+				fichas.get(Round-1).setX((colunaChosen*TILESIZE)+Game.WIDTH/OFFSET);
+				fichas.get(Round-1).setY((dropTo*TILESIZE)+Game.HEIGHT/OFFSET);
 
-				int vit = ChecarWin(dropTo, colunaChosen);
+				int vit = checarWin(dropTo, colunaChosen);
 				if(vit!=0) {
 					if(vit==1) {
-						Game.vitP1 = true;
+						Game.VITP1 = true;
 					}
 					else {
-						Game.vitP2 = true;
+						Game.VITP2 = true;
 					}
 				}
-				if(Round == nRounds-1) {
-					Game.empate = true;
+				if(Round == NROUNDS-1) {
+					Game.EMPATE = true;
 				}
 				
 				Round++;		
@@ -282,33 +285,33 @@ public class Tabuleiro implements InterfaceTabuleiro{
 				
 			}
 		}
-		// AQ
+		
 	}
 	
 	public void render(Graphics g) {
 
-		for(int x = 0; x < Width; x++) {
-			for(int y = 0; y < Height; y++) {
+		for(int x = 0; x < WIDTH; x++) {
+			for(int y = 0; y < HEIGHT; y++) {
 				
 				g.setColor(Color.white); //slots das fichas
 
-				if(Game.gameState.equals("Game_Over")) {
-					tabuleiroGraf[x][y].setX((x*tileSize+110)+Game.WIDTH*Game.SCALE/offSet);
-					tabuleiroGraf[x][y].setY((y*tileSize+250)+Game.HEIGHT*Game.SCALE/offSet);						
+				if(Game.GAMESTART.equals("Game_Over")) {
+					tabuleiroGraf[x][y].setX((x*TILESIZE+110)+Game.WIDTH*Game.SCALE/OFFSET);
+					tabuleiroGraf[x][y].setY((y*TILESIZE+250)+Game.HEIGHT*Game.SCALE/OFFSET);						
 				}
 				
 				else {
-					tabuleiroGraf[x][y].setX((x*tileSize)+Game.WIDTH/offSet);
-					tabuleiroGraf[x][y].setY((y*tileSize)+Game.HEIGHT/offSet);
+					tabuleiroGraf[x][y].setX((x*TILESIZE)+Game.WIDTH/OFFSET);
+					tabuleiroGraf[x][y].setY((y*TILESIZE)+Game.HEIGHT/OFFSET);
 					tabuleiroGraf[x][y].render(g);
 				}
 				tabuleiroGraf[x][y].render(g);
 				
 				for(int i=0; i<Round-1; i++) {
 					FichaE e = fichas.get(i);		
-					if(Game.gameState.equals("Game_Over") && i<Round-1) {
-						e.setX((e.getID()[0]*tileSize+110)+Game.WIDTH*Game.SCALE/offSet);
-						e.setY((e.getID()[1]*tileSize+250)+Game.HEIGHT*Game.SCALE/offSet);
+					if(Game.GAMESTART.equals("Game_Over") && i<Round-1) {
+						e.setX((e.getID()[0]*TILESIZE+110)+Game.WIDTH*Game.SCALE/OFFSET);
+						e.setY((e.getID()[1]*TILESIZE+250)+Game.HEIGHT*Game.SCALE/OFFSET);
 						e.render(g);							
 					}
 					else {
@@ -321,29 +324,29 @@ public class Tabuleiro implements InterfaceTabuleiro{
 				cor = cores[Round- 1];
 				fichaAr = new FichaE(cor, 0, 0, 32, 32, spritesheet.getSprite(32*cor, 0, 32, 32));
 				
-				if(!Game.gameState.equals("Game_Over")) {
+				if(!Game.GAMESTART.equals("Game_Over")) {
 					fichaAr.render(g);
-					//Destaca a coluna que o mouse esta em cima
-					if(dentro && !selected && !drop) {
-						fichaAr.setX((coluna*tileSize)+Game.WIDTH/offSet);
-						fichaAr.setY(Game.HEIGHT/offSet-dropSet);
+					
+					if(dentro && !selected && !drop) {	//Destaca a coluna que o mouse esta em cima
+						fichaAr.setX((coluna*TILESIZE)+Game.WIDTH/OFFSET);
+						fichaAr.setY(Game.HEIGHT/OFFSET-DROPSET);
 						fichaAr.render(g);
 					}
 						
-					//Destaca a coluna selecionada
-					if(selected) {	
-						fichaAr.setX((colunaSelected*tileSize)+Game.WIDTH/offSet);
-						fichaAr.setY(Game.HEIGHT/offSet-dropSet);
+					
+					if(selected) {	//Destaca a coluna selecionada
+						fichaAr.setX((colunaSelected*TILESIZE)+Game.WIDTH/OFFSET);
+						fichaAr.setY(Game.HEIGHT/OFFSET-DROPSET);
 						fichaAr.render(g);
 					}
 					
-					//Animação de queda				
-					if(drop) {
-						fichaAr.setX((colunaChosen*tileSize)+Game.WIDTH/offSet);
-						fichaAr.setY((Game.HEIGHT/offSet)-dropSet+(int)dropping);
+					
+					if(drop) {	//Animação de queda				
+						fichaAr.setX((colunaChosen*TILESIZE)+Game.WIDTH/OFFSET);
+						fichaAr.setY((Game.HEIGHT/OFFSET)-DROPSET+(int)dropping);
 						fichaAr.render(g);
 						dropping+=0.1;
-						if((int)dropping-dropSet>=(dropTo*tileSize)-offSet+dropSet-tileSize) {
+						if((int)dropping-DROPSET>=(dropTo*TILESIZE)-OFFSET+DROPSET-TILESIZE) {
 							sounds.playMP3WithTimeout(Sound_Ficha, 300);
 							drop=false;
 						}
@@ -353,7 +356,7 @@ public class Tabuleiro implements InterfaceTabuleiro{
 		}
 	}
 
-	public int ChecarWin(int linha, int coluna) {
+	public int checarWin(int linha, int coluna) {
 
 		int slot0, slot01, slot02, slot03, slot04;
 		slot0 = TABULEIRO[coluna][linha];
@@ -361,8 +364,8 @@ public class Tabuleiro implements InterfaceTabuleiro{
 		boolean sair;
 		
 		//Win na Linha Geral			
-		for(int y=0; y<Height; y++) {
-			for (int x = 0 ; x < Width-3 ; x ++) {						
+		for(int y=0; y<HEIGHT; y++) {
+			for (int x = 0 ; x < WIDTH-3 ; x ++) {						
 				slot01 = TABULEIRO[x][y];
 				slot02 = TABULEIRO[x+1][y];
 				slot03 = TABULEIRO[x+2][y];
@@ -377,8 +380,8 @@ public class Tabuleiro implements InterfaceTabuleiro{
 		}
 		
 		// Win na Coluna Geral
-		for (int y = 0 ; y < Height -3 ; y ++) {							
-			for(int x = 0; x < Width ; x ++ ) {
+		for (int y = 0 ; y < HEIGHT -3 ; y ++) {							
+			for(int x = 0; x < WIDTH ; x ++ ) {
 				slot01 = TABULEIRO[x][y];
 				slot02 = TABULEIRO[x][y+1];
 				slot03 = TABULEIRO[x][y+2];
@@ -401,7 +404,7 @@ public class Tabuleiro implements InterfaceTabuleiro{
 			xRel--;
 			yRel++;
 			
-			if((xRel<0 || yRel>Height-1) || (TABULEIRO[xRel][yRel] != slot0)) {
+			if((xRel<0 || yRel>HEIGHT-1) || (TABULEIRO[xRel][yRel] != slot0)) {
 				sair=true;
 			}
 			else {
@@ -416,7 +419,7 @@ public class Tabuleiro implements InterfaceTabuleiro{
 			xRel++;
 			yRel--;
 			
-			if((xRel>Width-1 || yRel<0) || (TABULEIRO[xRel][yRel] != slot0)) {
+			if((xRel>WIDTH-1 || yRel<0) || (TABULEIRO[xRel][yRel] != slot0)) {
 				sair=true;
 			}
 			else {
@@ -440,7 +443,7 @@ public class Tabuleiro implements InterfaceTabuleiro{
 			xRel++;
 			yRel++;
 			
-			if((xRel>Width-1 || yRel>Height-1) || (TABULEIRO[xRel][yRel] != slot0)) {
+			if((xRel>WIDTH-1 || yRel>HEIGHT-1) || (TABULEIRO[xRel][yRel] != slot0)) {
 				sair=true;
 			}
 			else {

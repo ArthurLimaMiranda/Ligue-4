@@ -21,7 +21,7 @@ public class Ranking {
 	private String[] tipoJogo = {"Normal", "Turbo", "Turbo Maluco"};
 	private String fileName = "res/ranking.csv";
 	
-	public void GeraRanking() throws FileNotFoundException, IOException {
+	public void geraRanking() throws FileNotFoundException, IOException {
 		partidas = new ArrayList<String[]>();
 		try {
 			LerRanking();
@@ -29,8 +29,8 @@ public class Ranking {
 		finally {
 			String[] entries = { "Jogador1", "Jogador2", "Vencedor", "Modo", "Dificuldade" };
 			String[] lastPartida = {Game.player1.getNome(), Game.player2.getNome(),
-									(Game.vitP1?Game.player1.getNome():(Game.vitP2?Game.player2.getNome():"Empate")), 
-									tipoJogo[Game.modoJogo], (Game.p2?"PvP":(Game.dificil?"Dificil":"Facil"))};
+									(Game.VITP1?Game.player1.getNome():(Game.VITP2?Game.player2.getNome():"Empate")), 
+									tipoJogo[Game.MODOJOGO], (Game.P2?"PvP":(Game.DIFICIL?"Dificil":"Facil"))};
 			try (var fos = new FileOutputStream(fileName); 
 			var osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
 			var writer = new CSVWriter(osw)){

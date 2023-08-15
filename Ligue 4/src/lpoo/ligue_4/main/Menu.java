@@ -15,7 +15,7 @@ public class Menu {
 	SoundEffects sounds = new SoundEffects();
 	private String Sound_Menu = "res/light-pull-string-32448 (mp3cut.net).mp3";	
 	private int choice=0, coluna=0, tela=0, options=4, linhaMax=4, maxColuna=2, modosDeJogo=3, modoRanking = 0;
-	private int[] maxChoice = {options-1, linhaMax, 1};
+	private int[] maxChoice = {options-1, linhaMax, 1,0};
 	private String modoJogo="Modo Normal", modoShowRanking ="MelhoresJogadores";
 	private ArrayList<Vencedores> vencedoresLista;
 	
@@ -56,16 +56,16 @@ public class Menu {
 					}
 		
 					if(choice==1) {
-						Game.p2 = !Game.p2;
+						Game.P2 = !Game.P2;
 						try {
 							Game.player2.setNome("");
 						} catch (LimiteNome e) {e.printStackTrace();}
 					}
 					
 					else if(choice==2) {
-						Game.modoJogo--;
-						if(Game.modoJogo<0) {
-							Game.modoJogo=modosDeJogo-1;
+						Game.MODOJOGO--;
+						if(Game.MODOJOGO<0) {
+							Game.MODOJOGO=modosDeJogo-1;
 						}
 					}
 				}
@@ -90,16 +90,16 @@ public class Menu {
 					}
 					
 					if(choice==1) {
-						Game.p2 = !Game.p2;
+						Game.P2 = !Game.P2;
 						try {
 							Game.player2.setNome("");
 						} catch (LimiteNome e) {e.printStackTrace();}
 					}
 					
 					else if(choice==2) {
-						Game.modoJogo++;
-						if(Game.modoJogo>modosDeJogo-1) {
-							Game.modoJogo=0;
+						Game.MODOJOGO++;
+						if(Game.MODOJOGO>modosDeJogo-1) {
+							Game.MODOJOGO=0;
 						}
 					}
 				}
@@ -127,9 +127,9 @@ public class Menu {
 					try {
 						Game.player1.setNome("");
 						Game.player2.setNome("");
-						Game.dificil = false;
-						Game.modoJogo=0;
-						Game.p2=false;
+						Game.DIFICIL = false;
+						Game.MODOJOGO=0;
+						Game.P2=false;
 					} catch (LimiteNome e) {e.printStackTrace();}
 					
 				}
@@ -175,52 +175,52 @@ public class Menu {
 			else if(tela==1) {
 				if(choice==0) {
 					if(coluna==0 && !writeNameP1) {
-						Game.playerName = "";
+						Game.PLAYERNAME = "";
 						writeNameP1=true;
 					}
-					else if(Game.p2 && coluna== 1 && !writeNameP2) {
-						Game.playerName = "";
+					else if(Game.P2 && coluna== 1 && !writeNameP2) {
+						Game.PLAYERNAME = "";
 						writeNameP2=true;
 					}
 					
-					else if(!Game.p2 && coluna== 1) {
-						Game.dificil = !Game.dificil;
+					else if(!Game.P2 && coluna== 1) {
+						Game.DIFICIL = !Game.DIFICIL;
 					}
 
 
-					if(writeNameP1 && coluna==0 && Game.playerName.length()>=1) {
+					if(writeNameP1 && coluna==0 && Game.PLAYERNAME.length()>=1) {
 						writeNameP1 = false;
 						try {
-							Game.player1.setNome(Game.playerName);
+							Game.player1.setNome(Game.PLAYERNAME);
 						} 
 						catch (LimiteNome e) {
 							e.printStackTrace();
 							Game.player1.setNome("");
 						}
-						Game.playerName = "";
+						Game.PLAYERNAME = "";
 					}
 					
-					if(Game.p2 && writeNameP2 && coluna==1 && Game.playerName.length()>=1) {
+					if(Game.P2 && writeNameP2 && coluna==1 && Game.PLAYERNAME.length()>=1) {
 						writeNameP2 = false;
 						try {
-							Game.player2.setNome(Game.playerName);
+							Game.player2.setNome(Game.PLAYERNAME);
 						} 
 						catch (LimiteNome e) {
 							e.printStackTrace();
 							Game.player2.setNome("");
 						}
-						Game.playerName = "";
+						Game.PLAYERNAME = "";
 					}
 				}
 				
 				else if(choice==3) {
-					if(Game.player1.getNome()!="" && (!Game.p2 || Game.player2.getNome()!="")) {
-						if(!Game.p2) {
+					if(Game.player1.getNome()!="" && (!Game.P2 || Game.player2.getNome()!="")) {
+						if(!Game.P2) {
 							Game.player2.setTipo(3);
 						}
 						
-						Game.newGame = true;
-						Game.gameState="Normal";
+						Game.NEWGAME = true;
+						Game.GAMESTART="Normal";
 						
 					}
 				}
@@ -273,14 +273,14 @@ public class Menu {
 			}
 			
 			else if(choice==0 && coluna==0 && writeNameP1) {
-				g.drawString(Game.playerName, (Game.WIDTH*Game.SCALE)/2-40-238, (Game.HEIGHT*Game.SCALE)/2-108);
+				g.drawString(Game.PLAYERNAME, (Game.WIDTH*Game.SCALE)/2-40-238, (Game.HEIGHT*Game.SCALE)/2-108);
 			}
 			g.drawString("Nome p1", (Game.WIDTH*Game.SCALE)/2-40-200, (Game.HEIGHT*Game.SCALE)/2-75);
 			
 			
 			g.drawRect((Game.WIDTH*Game.SCALE)/2-40+155, (Game.HEIGHT*Game.SCALE)/2-130, 180, 30);
 
-			if(Game.p2) {
+			if(Game.P2) {
 				if(!writeNameP2) {
 					if(choice==0 && coluna==1) {
 						g.fillRect((Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-124, 171, 19);
@@ -291,7 +291,7 @@ public class Menu {
 				}
 				
 				else if(choice==0 && coluna==1 && writeNameP2) {
-					g.drawString(Game.playerName, (Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-108);
+					g.drawString(Game.PLAYERNAME, (Game.WIDTH*Game.SCALE)/2-40+160, (Game.HEIGHT*Game.SCALE)/2-108);
 				}
 				g.drawString("Nome p2", (Game.WIDTH*Game.SCALE)/2-40+200, (Game.HEIGHT*Game.SCALE)/2-75);
 			}
@@ -307,7 +307,7 @@ public class Menu {
 				g.drawString("(Aperte enter para mudar)", (Game.WIDTH*Game.SCALE)/2-95+225, (Game.HEIGHT*Game.SCALE)/2-140);
 				g.setFont(new Font("arial", Font.BOLD, 20));
 				g.setColor(Color.white);
-				if(!Game.dificil) {
+				if(!Game.DIFICIL) {
 					g.drawString("Facil", (Game.WIDTH*Game.SCALE)/2-40+225, (Game.HEIGHT*Game.SCALE)/2-108);
 				}
 				else {
@@ -328,7 +328,7 @@ public class Menu {
 			}
 
 			if(choice==1) {
-				if(Game.p2) {
+				if(Game.P2) {
 					g.drawString("<  P v P  >", (Game.WIDTH*Game.SCALE)/2-50, (Game.HEIGHT*Game.SCALE)/2+55);
 				}
 				
@@ -338,7 +338,7 @@ public class Menu {
 			}
 			
 			else {			
-				if(Game.p2) {
+				if(Game.P2) {
 					g.drawString(">P v P<", (Game.WIDTH*Game.SCALE)/2-37, (Game.HEIGHT*Game.SCALE)/2+55);
 				}
 				
@@ -349,30 +349,30 @@ public class Menu {
 			
 			
 			if(choice==2) {				
-				if(Game.modoJogo==0) {
+				if(Game.MODOJOGO==0) {
 					modoJogo = "Modo Normal";
 					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-75, (Game.HEIGHT*Game.SCALE)/2+110);
 				}
-				else if(Game.modoJogo==1) {
+				else if(Game.MODOJOGO==1) {
 					modoJogo = "Modo Turbo";
 					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-68, (Game.HEIGHT*Game.SCALE)/2+110);
 				}
-				else if(Game.modoJogo == 2) {
+				else if(Game.MODOJOGO == 2) {
 					modoJogo = "Modo Turbo Maluco";
 					g.drawString("< "+modoJogo+" >", (Game.WIDTH*Game.SCALE)/2-100, (Game.HEIGHT*Game.SCALE)/2+110);
 				}
 			}
 			
 			else {
-				if(Game.modoJogo==0) {
+				if(Game.MODOJOGO==0) {
 					modoJogo = "Modo Normal";
 					g.drawString(">"+modoJogo+"<", (Game.WIDTH*Game.SCALE)/2-70, (Game.HEIGHT*Game.SCALE)/2+110);
 				}
-				else if(Game.modoJogo==1) {
+				else if(Game.MODOJOGO==1) {
 					modoJogo = "Modo Turbo";
 					g.drawString(">"+modoJogo+"<", (Game.WIDTH*Game.SCALE)/2-68, (Game.HEIGHT*Game.SCALE)/2+110);
 				}
-				else if(Game.modoJogo == 2) {
+				else if(Game.MODOJOGO == 2) {
 					modoJogo = "Modo Turbo Maluco";
 					g.drawString("> "+modoJogo+" <", (Game.WIDTH*Game.SCALE)/2-100, (Game.HEIGHT*Game.SCALE)/2+110);
 				}

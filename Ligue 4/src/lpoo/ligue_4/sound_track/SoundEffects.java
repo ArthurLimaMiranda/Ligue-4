@@ -11,10 +11,6 @@ import java.io.FileNotFoundException;
 
 public class SoundEffects{
 	
-	/*private String Sound_Menu = "/src/Sounds/light-pull-string-32448.mp3";
-	private String Sound_Ficha = "/src/Sounds/cash-register-purchase-87313.mp3";
-	private String Sound_Win = "/src/Sounds/bright-notifications-151766.mp3";*/
-
 	  public static void playMP3WithTimeout(String filePath, long timeoutInMillis) {
 	        Thread playbackThread = new Thread(() -> {
 	            try {
